@@ -26,6 +26,8 @@ namespace bravais
 enum BRAVAIS_LATTICE_TYPE
 {
    INVALID_TYPE = 0,
+   // 1D Bravais Lattices (1 types)
+   PRIMITIVE_SEGMENT,
    // 2D Bravais Lattices (5 types)
    PRIMITIVE_SQUARE,
    PRIMITIVE_HEXAGONAL,
@@ -57,256 +59,8 @@ enum BRAVAIS_LATTICE_TYPE
    arXiv:1004.2974v1.
 */
 
-/** The Lattice class defines a simple interface for a generic
-    topological lattice.
- */
-// class Lattice
-// {
-// public:
-//    inline double GetDim() const { return dim_; }
-//    inline double GetUnitCellVolume() const { return vol_; }
-
-//    void GetLatticeVectors(std::vector<Vector> & a) const;
-//    void GetReciprocalLatticeVectors(std::vector<Vector> & b) const;
-
-//    /** The Primitive Cell is the smallest volume that can tile all of
-//        space without voids and contains only one lattice point at the
-//        origin of the cordinate system.  The Primitive Cell is a
-//        Fundamental Domain with regard to Translational symmetries
-//        only. */
-//    bool MapToPrimitiveCell(const Vector & pt, Vector & ipt) const;
-
-//    /** The Fundamental Domain is a connected subset of the Primitive
-//        Cell which can generate the entire Primitive Cell under the
-//        action of a set of reflection symmetries. */
-//    virtual bool MapToFundamentalDomain(const Vector & pt,
-//                                        Vector & ipt) const = 0;
-
-// protected:
-//    /// Constructor requiring the dimension of the lattice space
-//    Lattice(unsigned int dim);
-
-//    /// Initializes the volume of the primitive cell
-//    void SetUnitCellVolume();
-
-//    unsigned int dim_;
-//    double       vol_;
-
-//    std::vector< Vector > lat_vecs_; // Lattice Vectors
-//    std::vector< Vector > rec_vecs_; // Reciprocal Lattice Vectors
-// };
-/*
-class BravaisLattice : public virtual Lattice
-{
-public:
-   virtual ~BravaisLattice() {}
-
-   // Maps an arbitrary point pt to the point ipt in the Wigner-Seitz
-   // Cell (equivalent to the Primitive Cell in the Lattice class).
-   // Returns true if pt required mapping.  In other words the return
-   // value is (pt != ipt)
-   virtual bool MapToWignerSeitzCell(const Vector & pt, Vector & ipt) const;
-
-   // Maps the point pt in the Wigner-Seitz Cell to the point ipt in the
-   // Fundamental Domain.  Returns true if pt required
-   // mapping.  In other words the return value is (pt != ipt)
-   virtual bool MapToReducedWignerSeitzCell(const Vector & pt,
-                   Vector & ipt) const;
-
-protected:
-  BravaisLattice(unsigned int dim): Lattice(dim) {}
-};
-*/
-// class ReciprocalLattice : public virtual Lattice
-// {
-// public:
-
-//    // Maps an arbitrary point pt to the point ipt in the
-//    // First Brillouin Zone.  Returns true if pt required
-//    // mapping.  In other words the return value is (pt != ipt)
-//    virtual bool MapToBrilouinZone(const Vector & pt, Vector & ipt) const;
-
-//    // Maps the point pt in the First Brillouin Zone to the point ipt in the
-//    // Irreducible Brillouin Zone.  Returns true if pt required
-//    // mapping.  In other words the return value is (pt != ipt)
-//    virtual bool MapToIrreducibleBrillouinZone(const Vector & pt,
-//                                               Vector & ipt) const;
-
-//    // The Symmetry points are the vertices of the Irreducible Brillouin Zone.
-//    virtual unsigned int GetNumberSymmetryPoints() = 0;
-
-//    // The Intermediate Points are the midpoints of the edges of the
-//    // Irreducible Brillouin Zone.
-//    virtual unsigned int GetNumberIntermediatePoints() = 0;
-
-//    // The Paths are sequences of edges that traverse every edge of the
-//    // Irreducible Brillouin Zone exactly once.
-//    virtual unsigned int GetNumberPaths() = 0;
-//    virtual unsigned int GetNumberPathSegments(int i) = 0;
-
-//    void          GetSymmetryPoint(int i, Vector & pt);
-//    std::string & GetSymmetryPointLabel(int i);
-//    int           GetSymmetryPointIndex(const std::string & label);
-
-//    void          GetIntermediatePoint(int p, int s, Vector & pt);
-//    std::string & GetIntermediatePointLabel(int p, int s);
-
-//    void GetPathSegmentEndPointIndices(int p, int s, int & e0, int & e1);
-
-// protected:
-//    ReciprocalLattice(unsigned int dim) : Lattice(dim) {}
-
-//    void SetVectorSizes();
-//    void SetIntermediatePoints();
-
-//    std::vector< Vector > sp_;
-//    std::vector< std::string > sl_;
-//    std::map< std::string, int >  si_;
-
-//    std::vector< std::vector< Vector > > ip_;
-//    std::vector< std::vector< std::string > > il_;
-//    std::vector< std::vector< int    > > path_;
-// };
-/*
-class CubicLattice : public virtual Lattice
-{
-public:
- CubicLattice(double a = 1.0);
-
- virtual bool MapToFundamentalDomain(const Vector & pt,
-              Vector & ipt) const;
-
-protected:
- double a_; // Lattice spacing
-};
-
-class FaceCenteredCubicLattice : public virtual Lattice
-{
-public:
- FaceCenteredCubicLattice(double a = 1.0);
-
- virtual bool MapToFundamentalDomain(const Vector & pt,
-              Vector & ipt) const;
-
-private:
- double a_;
-};
-
-class BodyCenteredCubicLattice : public virtual Lattice
-{
-public:
- BodyCenteredCubicLattice(double a = 1.0);
-
- virtual bool MapToFundamentalDomain(const Vector & pt,
-              Vector & ipt) const;
-
-private:
- double a_;
-};
-
-class HexagonalLattice : public virtual Lattice
-{
-public:
- HexagonalLattice(double a = 1.0, double c = 1.0);
-
- virtual bool MapToFundamentalDomain(const Vector & pt,
-              Vector & ipt) const;
-
-private:
- double a_;
- double c_;
-};
-*/
-/*
-class CubicBravaisLattice : public BravaisLattice, public CubicLattice
-{
-public:
- CubicBravaisLattice(double a = 1.0)
-   : Lattice(3), BravaisLattice(3), CubicLattice(a) {}
-};
-*/
-/*
-class CubicBrillouinZone : public ReciprocalLattice, public CubicLattice
-{
-public:
- CubicBrillouinZone(double a = 1.0);
-
- virtual unsigned int GetNumberSymmetryPoints()     { return 4; }
- virtual unsigned int GetNumberIntermediatePoints() { return 6; }
- virtual unsigned int GetNumberPaths()              { return 2; }
- virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?5:1; }
-};
-
-class FaceCenteredCubicBrillouinZone : public ReciprocalLattice,
-              public FaceCenteredCubicLattice
-{
-public:
- FaceCenteredCubicBrillouinZone(double a = 1.0);
-
- virtual unsigned int GetNumberSymmetryPoints()     { return 6; }
- virtual unsigned int GetNumberIntermediatePoints() { return 10; }
- virtual unsigned int GetNumberPaths()              { return 2; }
- virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?9:1; }
-};
-
-class BodyCenteredCubicBrillouinZone : public ReciprocalLattice,
-              public BodyCenteredCubicLattice
-{
-public:
- BodyCenteredCubicBrillouinZone(double a = 1.0);
-
- virtual unsigned int GetNumberSymmetryPoints()     { return 4; }
- virtual unsigned int GetNumberIntermediatePoints() { return 6; }
- virtual unsigned int GetNumberPaths()              { return 2; }
- virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?5:1; }
-};
-
-class HexagonalBrillouinZone : public ReciprocalLattice,
-           public HexagonalLattice
-{
-public:
- HexagonalBrillouinZone(double a = 1.0, double c = 1.0);
-
- virtual unsigned int GetNumberSymmetryPoints()     { return 6; }
- virtual unsigned int GetNumberIntermediatePoints() { return 9; }
- virtual unsigned int GetNumberPaths()              { return 3; }
- virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?7:1; }
-};
-*/
-/**  Bravais Lattices are parameterized by three lengths (a, b, and c)
-     and three angles (alpha, beta, gamma).
-
-           *-------------*
-          / \           / \
-         /   \ _gamma  /   \
-        /     \  \    /     \
-       /       \  |  /       \
-      /         *-------------*
-     /         /   /         /
-    /         /   /         /
-   *---------/---*   beta  /
-    \       /     \   _   / c
-     \     /       \ / \ /
-    a \   /_ alpha  \   /
-       \ /   \       \ /
-        *-------------*
-               b
-
-     They are also distinguished by a centering type.  The centerings
-     are: Primitive, Face-Centered, Body-Centered, and Base-Centered.
-
-| Name            |  a  |  b  |   c  |      alpha     |   beta  |  gamma  |
-|-----------------|-----|-----|------|----------------|---------|---------|
-| Square          | > 0 | = a |  N/A |       N/A      |   N/A   |  = pi/2 |
-| Hexagonal       | > 0 | = a |  N/A |       N/A      |   N/A   |  = pi/3 |
-| Cubic           | > 0 | = a |  = a |     = pi/2     |  = pi/2 |  = pi/2 |
-| Tetragonal      | > 0 | = a | != a |     = pi/2     |  = pi/2 |  = pi/2 |
-| Orthorhombic    | > 0 | > a |  > b |     = pi/2     |  = pi/2 |  = pi/2 |
-| Hexagonal Prism | > 0 | = a |  > 0 |     = pi/2     |  = pi/2 |  = pi/3 |
-| Rhombohedral    | > 0 | = a |  = a | > 0 && < 2pi/3 | = alpha | = alpha |
-| Monoclinic      | > 0 | > 0 | >= b | > arcsec(2c/b) |  = pi/2 |  = pi/2 |
-|                 |     |     |      |   && < pi/2    |         |         |
-| Triclinic       | > 0 | > 0 |  > 0 |    != pi/2     | != pi/2 | != pi/2 |
+/** The BravaisLattice class defines the common interface for both
+    the 2D and 3D Bravais lattice classes.
 
  */
 class BravaisLattice
@@ -326,7 +80,8 @@ public:
 
    // These vectors give the location of the nearest neighbors of the
    // fundamental domain.  They also can be used to map nodes between
-   // opposite faces of the unit cell.
+   // opposite faces of the unit cell.  There will be one translation
+   // vector for each pair of opposing faces.
    void GetTranslationVectors(std::vector<Vector> & t) const;
 
    // These are the radii of circles which can be inscribed within each
@@ -344,10 +99,18 @@ public:
 
    // The Fundamental Domain is a connected subset of the Primitive
    // Cell which can generate the entire Primitive Cell under the
-   // action of a set of reflection symmetries.  Returns true if the
-   // point required mapping i.e. returns (ipt != pt).
+   // action of a set of rotation and reflection symmetries.  Returns
+   // true if the point required mapping i.e. returns (ipt != pt).
    virtual bool MapToFundamentalDomain(const Vector & pt,
                                        Vector & ipt) const = 0;
+
+   // The number of proper and improper rotations needed to fill the
+   // primitive cell with transformed copies of the fundamental domain.
+   virtual unsigned int GetNumberTransformations() const = 0;
+
+   // Return the linear operator which transforms points in the fundamental
+   // domain into corresponding points elsewhere in the primitive cell.
+   virtual const DenseMatrix & GetTransformation(int ti) const = 0;
 
    // In this context "Symmetry Points" are points in the
    // reciprocal space.  They are sometimes called "High-Symmetry
@@ -367,7 +130,11 @@ public:
 
    void GetPathSegmentEndPointIndices(int p, int s, int & e0, int & e1);
 
-   virtual mfem::Mesh * GetCoarseWignerSeitzMesh() const = 0;
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const = 0;
+
+   virtual mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   virtual mfem::Mesh *
+   GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 protected:
    BravaisLattice(unsigned int dim);
@@ -392,11 +159,60 @@ protected:
    std::string label_;
    BRAVAIS_LATTICE_TYPE type_;
 
+   mutable DenseMatrix T_;
+
    unsigned int dim_;
    double vol_;
    double bz_vol_;
 };
 
+/**  Bravais Lattices in 1D are parameterized by a single length (a).
+
+   *-------------*
+           a
+
+     In 1D there is only one centering type: Primitive.
+
+  | Name        |  a  |
+  |-------------|-----|
+  | Segment     | > 0 |
+
+ */
+class BravaisLattice1D : public BravaisLattice
+{
+public:
+   BravaisLattice1D(double a);
+
+   void GetAxialLength(double &a);
+
+protected:
+   double a_;
+};
+
+/**  Bravais Lattices in 2D are parameterized by two lengths (a and b)
+     and an angle (gamma).
+
+          *-------------*
+         /             /
+        /             /
+     b /             /
+      /             /
+     /_ gamma      /
+    /  \          /
+   *-------------*
+           a
+
+     They are also distinguished by a centering type.  The centerings
+     are: Primitive and Centered.
+
+  | Name        |  a  |  b  |  gamma  |
+  |-------------|-----|-----|---------|
+  | Square      | > 0 | = a | =  pi/2 |
+  | Rectangular | > 0 | > a | =  pi/2 |
+  | Hexagonal   | > 0 | = a | = 2pi/3 |
+  | Oblique     | > 0 | > a | <  pi/2 |
+
+ */
 class BravaisLattice2D : public BravaisLattice
 {
 public:
@@ -405,12 +221,53 @@ public:
    void GetAxialLengths(double &a, double &b);
    void GetInteraxialAngle(double &gamma);
 
+   unsigned int GetNumberTransformations() const { return 0; }
+
+   const DenseMatrix & GetTransformation(int ti) const { return T_; }
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const { return NULL; }
+
 protected:
    double a_;
    double b_;
    double gamma_;
 };
 
+/**  Bravais Lattices in 3D are parameterized by three lengths (a, b, and c)
+     and three angles (alpha, beta, gamma).
+
+           *-------------*
+          / \           / \
+         /   \ _gamma  /   \
+        /     \  \    /     \
+       /       \  |  /       \
+      /         *-------------*
+     /         /   /         /
+    /         /   /         /
+   *---------/---*   beta  /
+    \       /     \   _   / c
+     \     /       \ / \ /
+    a \   /_ alpha  \   /
+       \ /   \       \ /
+        *-------------*
+               b
+
+     They are also distinguished by a centering type.  The centerings
+     are: Primitive, Face-Centered, Body-Centered, and Base-Centered.
+
+  | Name            |  a  |  b  |   c  |      alpha     |   beta  |  gamma  |
+  |-----------------|-----|-----|------|----------------|---------|---------|
+  | Cubic           | > 0 | = a |  = a |     = pi/2     |  = pi/2 |  = pi/2 |
+  | Tetragonal      | > 0 | = a | != a |     = pi/2     |  = pi/2 |  = pi/2 |
+  | Orthorhombic    | > 0 | > a |  > b |     = pi/2     |  = pi/2 |  = pi/2 |
+  | Hexagonal Prism | > 0 | = a |  > 0 |     = pi/2     |  = pi/2 | = 2pi/3 |
+  | Rhombohedral    | > 0 | = a |  = a | > 0 && < 2pi/3 | = alpha | = alpha |
+  | Monoclinic      | > 0 | > 0 | >= b | > arcsec(2c/b) |  = pi/2 |  = pi/2 |
+  |                 |     |     |      |   && < pi/2    |         |         |
+  | Triclinic       | > 0 | > 0 |  > 0 |    != pi/2     | != pi/2 | != pi/2 |
+
+
+ */
 class BravaisLattice3D : public BravaisLattice
 {
 public:
@@ -420,6 +277,12 @@ public:
    void GetAxialLengths(double &a, double &b, double &c);
    void GetInteraxialAngles(double &alpha, double &beta, double &gamma);
 
+   unsigned int GetNumberTransformations() const { return 0; }
+
+   const DenseMatrix & GetTransformation(int ti) const { return T_; }
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const { return NULL; }
+
 protected:
    double a_;
    double b_;
@@ -427,6 +290,43 @@ protected:
    double alpha_;
    double beta_;
    double gamma_;
+};
+
+class LinearLattice : public BravaisLattice1D
+{
+public:
+   LinearLattice(double a = 1.0);
+
+   virtual bool MapToFundamentalDomain(const Vector & pt,
+                                       Vector & ipt) const;
+
+   virtual unsigned int GetNumberSymmetryPoints()     { return 2; }
+   virtual unsigned int GetNumberIntermediatePoints() { return 1; }
+   virtual unsigned int GetNumberPaths()              { return 1; }
+   virtual unsigned int GetNumberPathSegments(int i)  { return 1; }
+
+   unsigned int GetNumberTransformations() const { return 2; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
+
+private:
+   // Data for mesh of the fundamental domain
+   double fd_vert_[6];   // Vertex coordinates
+   int fd_e2v_[2];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[2];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[2]; // Boundary element Attributes
+
+   // Data for mesh of the corresponding Wigner-Setiz Cell
+   double ws_vert_[6];   // Vertex coordinates
+   int ws_e2v_[2];       // Element to vertex connectivity
+   int ws_elem_att_[1];  // Element Attributes
+   int ws_be2v_[2];      // Boundary Element to vertex connectivity
+   int ws_belem_att_[2]; // Boundary element Attributes
 };
 
 class SquareLattice : public BravaisLattice2D
@@ -442,17 +342,30 @@ public:
    virtual unsigned int GetNumberPaths()              { return 1; }
    virtual unsigned int GetNumberPathSegments(int i)  { return 3; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   virtual unsigned int GetNumberTransformations() const { return 8; }
+   virtual const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
 
 private:
-   // double a_;
 
+   // Data for mesh of the fundamental domain
+   double fd_vert_[9];   // Vertex coordinates
+   int fd_e2v_[3];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[6];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[3]; // Boundary element Attributes
+   /*
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[12];  // Vertex coordinates
    int ws_e2v_[4];       // Element to vertex connectivity
    int ws_elem_att_[1];  // Element Attributes
    int ws_be2v_[8];      // Boundary Element to vertex connectivity
    int ws_belem_att_[4]; // Boundary element Attributes
+   */
 };
 
 class HexagonalLattice : public BravaisLattice2D
@@ -468,17 +381,150 @@ public:
    virtual unsigned int GetNumberPaths()              { return 1; }
    virtual unsigned int GetNumberPathSegments(int i)  { return 3; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 12; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
 
 private:
-   // double a_;
+   // DenseMatrix R60_;
+   //  DenseMatrix RX_;
+   // mutable DenseMatrix TTmp_;
+
+   // Data for mesh of the fundamental domain
+   double fd_vert_[9];   // Vertex coordinates
+   int fd_e2v_[3];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[6];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[3]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[21];  // Vertex coordinates
+    int ws_e2v_[12];      // Element to vertex connectivity
+    int ws_elem_att_[3];  // Element Attributes
+    int ws_be2v_[12];     // Boundary Element to vertex connectivity
+    int ws_belem_att_[6]; // Boundary element Attributes
+   */
+};
+
+class RectangularLattice : public BravaisLattice2D
+{
+public:
+   RectangularLattice(double a = 0.5, double b = 1.0);
+
+   virtual bool MapToFundamentalDomain(const Vector & pt,
+                                       Vector & ipt) const;
+
+   virtual unsigned int GetNumberSymmetryPoints()     { return 4; }
+   virtual unsigned int GetNumberIntermediatePoints() { return 4; }
+   virtual unsigned int GetNumberPaths()              { return 1; }
+   virtual unsigned int GetNumberPathSegments(int i)  { return 4; }
+
+   virtual unsigned int GetNumberTransformations() const { return 4; }
+   virtual const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
+
+private:
+   // Data for mesh of the fundamental domain
+   double fd_vert_[12];  // Vertex coordinates
+   int fd_e2v_[4];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[8];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[4]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[12];  // Vertex coordinates
+    int ws_e2v_[4];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[8];      // Boundary Element to vertex connectivity
+    int ws_belem_att_[4]; // Boundary element Attributes
+   */
+};
+
+class CenteredRectangularLattice : public BravaisLattice2D
+{
+public:
+   CenteredRectangularLattice(double a = 0.5, double b = 1.0);
+
+   virtual bool MapToFundamentalDomain(const Vector & pt,
+                                       Vector & ipt) const;
+
+   virtual unsigned int GetNumberSymmetryPoints()     { return 4; }
+   virtual unsigned int GetNumberIntermediatePoints() { return 4; }
+   virtual unsigned int GetNumberPaths()              { return 1; }
+   virtual unsigned int GetNumberPathSegments(int i)  { return 4; }
+
+   unsigned int GetNumberTransformations() const { return 4; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
+
+private:
+   // Data for mesh of the fundamental domain
+   double fd_vert_[12];  // Vertex coordinates
+   int fd_e2v_[4];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[8];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[4]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[12];  // Vertex coordinates
+    int ws_e2v_[4];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[8];      // Boundary Element to vertex connectivity
+    int ws_belem_att_[4]; // Boundary element Attributes
+   */
+};
+
+class ObliqueLattice : public BravaisLattice2D
+{
+public:
+   ObliqueLattice(double a = 0.5, double b = 1.0, double gamma = 0.4 * M_PI);
+
+   virtual bool MapToFundamentalDomain(const Vector & pt,
+                                       Vector & ipt) const;
+
+   virtual unsigned int GetNumberSymmetryPoints()     { return 8; }
+   virtual unsigned int GetNumberIntermediatePoints() { return 8; }
+   virtual unsigned int GetNumberPaths()              { return 1; }
+   virtual unsigned int GetNumberPathSegments(int i)  { return 8; }
+
+   unsigned int GetNumberTransformations() const { return 2; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
+
+private:
+   // Data for mesh of the fundamental domain
+   double fd_vert_[24];  // Vertex coordinates
+   // int fd_e2v_[18];      // Element to vertex connectivity
+   // int fd_elem_att_[6];  // Element Attributes
+   int fd_e2v_[12];      // Element to vertex connectivity
+   int fd_elem_att_[3];  // Element Attributes
+   int fd_be2v_[16];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[8]; // Boundary element Attributes
 
    // Data for mesh of the corresponding Wigner-Setiz Cell
-   double ws_vert_[21];  // Vertex coordinates
-   int ws_e2v_[12];      // Element to vertex connectivity
-   int ws_elem_att_[3];  // Element Attributes
-   int ws_be2v_[12];     // Boundary Element to vertex connectivity
-   int ws_belem_att_[6]; // Boundary element Attributes
+   /*
+    double ws_vert_[12];  // Vertex coordinates
+    int ws_e2v_[4];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[8];      // Boundary Element to vertex connectivity
+    int ws_belem_att_[4]; // Boundary element Attributes
+   */
 };
 
 class CubicLattice : public BravaisLattice3D
@@ -494,23 +540,36 @@ public:
    virtual unsigned int GetNumberPaths()              { return 2; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?5:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 48; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
 
-   // Data for mesh of the corresponding Wigner-Setiz Cell
-   double ws_vert_[24];  // Vertex coordinates
-   int ws_e2v_[8];       // Element to vertex connectivity
-   int ws_elem_att_[1];  // Element Attributes
-   int ws_be2v_[24];     // Boundary Element to vertex connectivity
-   int ws_belem_att_[6]; // Boundary element Attributes
+   // Data for mesh of the fundamental domain
+   double fd_vert_[12];  // Vertex coordinates
+   int fd_e2v_[4];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[12];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[4]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[24];  // Vertex coordinates
+    int ws_e2v_[8];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[24];     // Boundary Element to vertex connectivity
+    int ws_belem_att_[6]; // Boundary element Attributes
 
-   double ws_vert_tet_[81];   // Vertex coordinates
-   int ws_e2v_tet_[192];      // Element to vertex connectivity
-   int ws_elem_att_tet_[48];  // Element Attributes
-   int ws_be2v_tet_[144];     // Boundary Element to vertex connectivity
-   int ws_belem_att_tet_[48]; // Boundary element Attributes
+    double ws_tet_vert_[81];   // Vertex coordinates
+    int ws_tet_e2v_[192];      // Element to vertex connectivity
+    int ws_tet_elem_att_[48];  // Element Attributes
+    int ws_tet_be2v_[144];     // Boundary Element to vertex connectivity
+    int ws_tet_belem_att_[48]; // Boundary element Attributes
+   */
 };
 
 class FaceCenteredCubicLattice : public BravaisLattice3D
@@ -526,17 +585,30 @@ public:
    virtual unsigned int GetNumberPaths()              { return 2; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?9:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 48; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   //double a_;
 
+   // Data for mesh of the fundamental domain
+   double fd_vert_[12];  // Vertex coordinates
+   int fd_e2v_[4];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[12];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[4]; // Boundary element Attributes
+   /*
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[45];   // Vertex coordinates
    int ws_e2v_[32];       // Element to vertex connectivity
    int ws_elem_att_[4];   // Element Attributes
    int ws_be2v_[48];      // Boundary Element to vertex connectivity
    int ws_belem_att_[12]; // Boundary element Attributes
+   */
 };
 
 class BodyCenteredCubicLattice : public BravaisLattice3D
@@ -552,17 +624,37 @@ public:
    virtual unsigned int GetNumberPaths()              { return 2; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?5:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 48; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   //double a_;
 
+   // Data for mesh of the fundamental domain
+   /*
+   double fd_vert_[18];  // Vertex coordinates
+   int fd_e2v_[6];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[18];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[5]; // Boundary element Attributes
+   */
+   double fd_vert_[18];  // Vertex coordinates
+   int fd_e2v_[9];       // Element to vertex connectivity
+   int fd_elem_att_[2];  // Element Attributes
+   int fd_be2v_[22];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[7]; // Boundary element Attributes
+   /*
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[114];  // Vertex coordinates
    int ws_e2v_[128];      // Element to vertex connectivity
    int ws_elem_att_[16];  // Element Attributes
    int ws_be2v_[120];     // Boundary Element to vertex connectivity
    int ws_belem_att_[30]; // Boundary element Attributes
+   */
 };
 
 class TetragonalLattice : public BravaisLattice3D
@@ -578,18 +670,30 @@ public:
    virtual unsigned int GetNumberPaths()              { return 3; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?7:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 16; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double c_;
 
-   // Data for mesh of the corresponding Wigner-Setiz Cell
-   double ws_vert_[24];  // Vertex coordinates
-   int ws_e2v_[8];       // Element to vertex connectivity
-   int ws_elem_att_[1];  // Element Attributes
-   int ws_be2v_[24];     // Boundary Element to vertex connectivity
-   int ws_belem_att_[6]; // Boundary element Attributes
+   // Data for mesh of the fundamental domain
+   double fd_vert_[18];  // Vertex coordinates
+   int fd_e2v_[6];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[18];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[5]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[24];  // Vertex coordinates
+    int ws_e2v_[8];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[24];     // Boundary Element to vertex connectivity
+    int ws_belem_att_[6]; // Boundary element Attributes
+   */
 };
 
 class BodyCenteredTetragonalLattice : public BravaisLattice3D
@@ -609,14 +713,39 @@ public:
    virtual unsigned int GetNumberPathSegments(int i)
    { return (c_<a_)?((i==0)?8:1):((i==0)?10:1); }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 16; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   double a_;
-   double c_;
+
+   // Data for mesh of the fundamental domain
+   // There are two possible shapes for the Wigner-Seitz cell:
+   // elongated dodecahedron when c > sqrt(2) a, truncated octahedron
+   // when c < sqrt(2) a. These correspind to two different fundamenatal
+   // domains.  The following arrays will be sized to accomodate the larger
+   // case.
+   //
+   // | type      |num nodes| num elementss       | num bdr elems |
+   // |-----------|---------|---------------------|---------------|
+   // | elong-dod |    7    | 3 (pyr + 2 tet)     |      12       |
+   // | trunc-oct |    9    | 3 (pyr + pri + tet) |      10       |
+   //
+   int fd_nvert_;
+   double fd_vert_[27];   // Vertex coordinates
+   int fd_e2v_[15];       // Element to vertex connectivity
+   int fd_elem_att_[3];   // Element Attributes
+   int fd_nbt_;
+   int fd_nbq_;
+   int fd_be2v_[37];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[12]; // Boundary element Attributes
 
    // There are two possible shapes for the Wigner-Seitz cell:
-   // elongated dodecahedron when c > sqrt(2) a, trucated octahedron
+   // elongated dodecahedron when c > sqrt(2) a, truncated octahedron
    // when c < sqrt(2) a. The following arrays will be sized to
    // accomodate the larger case.
    //
@@ -627,12 +756,13 @@ private:
    //
    void createElongatedDodecahedron();
    void createTruncatedOctahedron();
-
+   /*
    double ws_vert_[114];  // Vertex coordinates
    int ws_e2v_[128];      // Element to vertex connectivity
    int ws_elem_att_[16];  // Element Attributes
    int ws_be2v_[120];     // Boundary Element to vertex connectivity
    int ws_belem_att_[30]; // Boundary element Attributes
+   */
 };
 
 class OrthorhombicLattice : public BravaisLattice3D
@@ -648,19 +778,30 @@ public:
    virtual unsigned int GetNumberPaths()              { return 4; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?9:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 8; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
 
-   // Data for mesh of the corresponding Wigner-Setiz Cell
-   double ws_vert_[24];  // Vertex coordinates
-   int ws_e2v_[8];       // Element to vertex connectivity
-   int ws_elem_att_[1];  // Element Attributes
-   int ws_be2v_[24];     // Boundary Element to vertex connectivity
-   int ws_belem_att_[6]; // Boundary element Attributes
+   // Data for mesh of the fundamental domain
+   double fd_vert_[24];  // Vertex coordinates
+   int fd_e2v_[8];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[24];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[6]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[24];  // Vertex coordinates
+    int ws_e2v_[8];       // Element to vertex connectivity
+    int ws_elem_att_[1];  // Element Attributes
+    int ws_be2v_[24];     // Boundary Element to vertex connectivity
+    int ws_belem_att_[6]; // Boundary element Attributes
+   */
 };
 
 class FaceCenteredOrthorhombicLattice : public BravaisLattice3D
@@ -695,12 +836,15 @@ public:
             return 0;
       };
    }
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+
+   unsigned int GetNumberTransformations() const { return 8; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
+
    int variety_;
 
    // Data for mesh of the corresponding Wigner-Setiz Cell
@@ -725,12 +869,13 @@ public:
    virtual unsigned int GetNumberPaths()              { return 3; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?11:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 8; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
 
    // There are two possible shapes for the Wigner-Seitz cell:
    // elongated dodecahedron when c > sqrt(a^2+b^2), trucated octahedron
@@ -766,12 +911,22 @@ public:
    virtual unsigned int GetNumberPaths()              { return 2; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?11:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 8; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
+
+   // Data for mesh of the fundamental domain
+   double fd_vert_[30];  // Vertex coordinates
+   int fd_e2v_[14];       // Element to vertex connectivity
+   int fd_elem_att_[2];  // Element Attributes
+   int fd_be2v_[34];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[9]; // Boundary element Attributes
 
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[63];   // Vertex coordinates
@@ -794,18 +949,30 @@ public:
    virtual unsigned int GetNumberPaths()              { return 3; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (i==0)?7:1; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 24; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double c_;
 
-   // Data for mesh of the corresponding Wigner-Setiz Cell
-   double ws_vert_[63];   // Vertex coordinates
-   int ws_e2v_[48];       // Element to vertex connectivity
-   int ws_elem_att_[6];   // Element Attributes
-   int ws_be2v_[72];      // Boundary Element to vertex connectivity
-   int ws_belem_att_[18]; // Boundary element Attributes
+   // Data for mesh of the fundamental domain
+   double fd_vert_[18];  // Vertex coordinates
+   int fd_e2v_[6];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[20];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[5]; // Boundary element Attributes
+   /*
+    // Data for mesh of the corresponding Wigner-Setiz Cell
+    double ws_vert_[63];   // Vertex coordinates
+    int ws_e2v_[48];       // Element to vertex connectivity
+    int ws_elem_att_[6];   // Element Attributes
+    int ws_be2v_[72];      // Boundary Element to vertex connectivity
+    int ws_belem_att_[18]; // Boundary element Attributes
+   */
 };
 
 class RhombohedralLattice : public BravaisLattice3D
@@ -821,11 +988,10 @@ public:
    virtual unsigned int GetNumberPaths()              { return (alpha_ < 0.5 * M_PI)?4:1; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (alpha_ < 0.5 * M_PI)?((i==0)?2:((i==1)?3:((i==2)?3:1))):9; }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double alpha_;
 
    // There are two possible shapes for the Wigner-Seitz cell:
    // rhombic dodecahedron when alpha < pi/2, trucated octahedron
@@ -862,13 +1028,24 @@ public:
    virtual unsigned int GetNumberPathSegments(int i)
    { return (i==0)?8:((i==1)?2:1); }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   unsigned int GetNumberTransformations() const { return 4; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
-   // double alpha_;
+
+   // Data for mesh of the fundamental domain
+   double fd_vert_[48];   // Vertex coordinates
+   // int fd_e2v_[18];      // Element to vertex connectivity
+   // int fd_elem_att_[6];  // Element Attributes
+   int fd_e2v_[24];       // Element to vertex connectivity
+   int fd_elem_att_[3];   // Element Attributes
+   int fd_be2v_[56];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[14]; // Boundary element Attributes
 
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[63];   // Vertex coordinates
@@ -902,13 +1079,10 @@ public:
    virtual unsigned int GetNumberPathSegments(int i)
    { return (i==0)?8:((i==1)?2:1); }
 
-   mfem::Mesh * GetCoarseWignerSeitzMesh() const;
+   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
-   // double a_;
-   // double b_;
-   // double c_;
-   // double alpha_;
 
    void createElongatedDodecahedron();
    void createTruncatedOctahedron();
@@ -919,6 +1093,47 @@ private:
    int ws_elem_att_[16];  // Element Attributes
    int ws_be2v_[120];     // Boundary Element to vertex connectivity
    int ws_belem_att_[30]; // Boundary element Attributes
+};
+
+class TriclinicLattice : public BravaisLattice3D
+{
+public:
+   TriclinicLattice(double a = 1.0, double b = 1.0, double c = 1.2,
+                    double alpha = 0.4*M_PI, double beta = 0.4*M_PI,
+                    double gamma = 0.4*M_PI);
+
+   virtual bool MapToFundamentalDomain(const Vector & pt,
+                                       Vector & ipt) const;
+
+   virtual unsigned int GetNumberSymmetryPoints()     { return 8; }
+   virtual unsigned int GetNumberIntermediatePoints() { return 8; }
+   virtual unsigned int GetNumberPaths()              { return 4; }
+   virtual unsigned int GetNumberPathSegments(int i)
+   { return (i < 4) ? 2 : 1; }
+
+   unsigned int GetNumberTransformations() const { return 2; }
+   const DenseMatrix & GetTransformation(int ti) const;
+
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+
+private:
+
+   // Flag to distinguish TRI1a, TRI1b, TRI2a, TRI2b variants
+   // 'a' variants have t12ab_ % 2 = 0
+   // 'b' variants have t12ab_ % 2 = 1
+   // '1' variants have t12ab_ / 2 = 0
+   // '2' variants have t12ab_ / 2 = 1
+   short unsigned int t12ab_;
+
+   // Data for mesh of the fundamental domain
+   double fd_vert_[48];   // Vertex coordinates
+   int fd_e2v_[24];       // Element to vertex connectivity
+   int fd_elem_att_[3];   // Element Attributes
+   int fd_be2v_[56];      // Boundary Element to vertex connectivity
+   int fd_belem_att_[14]; // Boundary element Attributes
 };
 
 /// Factory function to construct and return a pointer to a specific
@@ -1122,6 +1337,9 @@ public:
                      mfem::miniapps::RT_ParFESpace & fes);
 };
 
+
+void
+MergeMeshNodes(Mesh * mesh, int logging = 0);
 
 Mesh *
 MakePeriodicMesh(Mesh * mesh, const std::vector<Vector> & trans_vecs,
