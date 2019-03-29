@@ -1,0 +1,17 @@
+CUB	P	Rectangular Prism
+TET	P	Rectangular Prism
+ORC	P	Rectangular Prism
+HEX	P	Hexagonal Prism
+RHL	P	Rhombic Dodecahedron or Truncated Octahedron
+MCL	P	Hexagonal Prism
+TRI	P
+
+FCC	F	Rhombic Dodecahedron
+ORCF	F	Truncated Octahedron
+
+BCC	I	Truncated Octahedron
+BCT	I	Elongated Dodecahedron or Truncated Octahedron
+ORCI	I	Elongated Dodecahedron or Truncated Octahedron
+
+ORCC	C	Hexagonal Prism
+MCLC	C
