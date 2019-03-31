@@ -12,8 +12,6 @@
 #ifndef MFEM_BRAVAIS
 #define MFEM_BRAVAIS
 
-#include "../../config/config.hpp"
-
 #include "mfem.hpp"
 #include "../common/pfem_extras.hpp"
 
