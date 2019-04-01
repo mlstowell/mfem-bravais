@@ -41,6 +41,25 @@ make style
 
 endef
 
+# Save the MAKEOVERRIDES for cases where we explicitly want to pass the command
+# line overrides to sub-make:
+override MAKEOVERRIDES_SAVE := $(MAKEOVERRIDES)
+# Do not pass down variables from the command-line to sub-make:
+MAKEOVERRIDES =
+
+# Path to the mfem source directory, defaults to this makefile's directory:
+THIS_MK := $(lastword $(MAKEFILE_LIST))
+$(if $(wildcard $(THIS_MK)),,$(error Makefile not found "$(THIS_MK)"))
+BRAVAIS_DIR ?= $(patsubst %/,%,$(dir $(THIS_MK)))
+BRAVAIS_REAL_DIR := $(realpath $(BRAVAIS_DIR))
+$(if $(BRAVAIS_REAL_DIR),,$(error Source directory "$(BRAVAIS_DIR)" is not valid))
+SRC := $(if $(BRAVAIS_REAL_DIR:$(CURDIR)=),$(BRAVAIS_DIR)/,)
+$(if $(word 2,$(SRC)),$(error Spaces in SRC = "$(SRC)" are not supported))
+
+BRAVAIS_GIT_STRING = $(shell [ -d $(BRAVAIS_DIR)/.git ] && \
+   git -C $(BRAVAIS_DIR) \
+   describe --all --long --abbrev=40 --dirty --always 2> /dev/null)
+
 # Custom configuration flags
 BRAVAIS_CONFIG_MK ?=
 -include $(BRAVAIS_CONFIG_MK)
@@ -60,7 +79,8 @@ endif
 RANLIB ?= ranlib
 
 # Use the MFEM build directory
-MFEM_DIR ?= ../mfem
+#MFEM_DIR ?= ../mfem
+MFEM_DIR ?= ../dev/pyramid-dev
 CONFIG_MK ?= $(MFEM_DIR)/config/config.mk
 # Use the MFEM install directory
 # MFEM_DIR = ../mfem/mfem
@@ -102,7 +122,7 @@ ifneq ($(BRAVAIS_DEBUG),$(MFEM_DEBUG))
 endif
 
 BRAVAIS_FLAGS = $(CPPFLAGS) $(CXXFLAGS) $(MFEM_INCFLAGS) $(BRAVAIS_OPTS)
-BRAVAIS_LIBS = $(MFEM_LIBS)
+BRAVAIS_LIBS = $(MFEM_LIBS) -lmfem-extras
 
 ifeq ($(BRAVAIS_DEBUG),YES)
    BRAVAIS_FLAGS += -DBRAVAIS_DEBUG
@@ -130,7 +150,34 @@ BRAVAIS_LIBS += $(PTHREAD_LIB)
 
 LIBS = $(strip $(BRAVAIS_LIBS) $(BRAVAIS_LDFLAGS))
 CCC  = $(strip $(CXX) $(BRAVAIS_FLAGS))
-Ccc  = $(strip $(CC) $(CFLAGS) $(GL_OPTS))
+Ccc  = $(strip $(CC) $(CFLAGS))
+
+EXAMPLE_SUBDIRS = 
+EXAMPLE_DIRS := examples $(addprefix examples/,$(EXAMPLE_SUBDIRS))
+EXAMPLE_TEST_DIRS := examples
+
+MINIAPP_SUBDIRS = common electromagnetics meshing performance tools nurbs
+MINIAPP_DIRS := $(addprefix miniapps/,$(MINIAPP_SUBDIRS))
+MINIAPP_TEST_DIRS := $(filter-out %/common,$(MINIAPP_DIRS))
+MINIAPP_USE_COMMON := $(addprefix miniapps/,electromagnetics tools)
+
+EM_DIRS = $(EXAMPLE_DIRS) $(MINIAPP_DIRS)
+
+# Use BUILD_DIR on the command line; set BRAVAIS_BUILD_DIR before including this
+# makefile or config/config.mk from a separate $(BUILD_DIR).
+BRAVAIS_BUILD_DIR ?= .
+BUILD_DIR := $(BRAVAIS_BUILD_DIR)
+BUILD_REAL_DIR := $(abspath $(BUILD_DIR))
+ifneq ($(BUILD_REAL_DIR),$(BRAVAIS_REAL_DIR))
+   BUILD_SUBDIRS = $(DIRS) config $(EM_DIRS) doc $(TEST_DIRS)
+   BUILD_DIR_DEF = -DMFEM_BUILD_DIR="$(BUILD_REAL_DIR)"
+   BLD := $(if $(BUILD_REAL_DIR:$(CURDIR)=),$(BUILD_DIR)/,)
+   $(if $(word 2,$(BLD)),$(error Spaces in BLD = "$(BLD)" are not supported))
+else
+   BUILD_DIR = $(BRAVAIS_DIR)
+   BLD := $(SRC)
+endif
+BRAVAIS_BUILD_DIR := $(BUILD_DIR)
 
 # generated with 'echo lib/*.c*'
 SOURCE_FILES = lib/bravais.cpp
@@ -150,12 +197,13 @@ HEADER_FILES = lib/bravais.hpp
 	cd $(<D); $(Ccc) -c $(<F)
 
 # Default rule.
-lib: $(if $(static),$(BLD)libbravais.a) \
-	$(if $(shared),$(BLD)libbravais.$(SO_EXT))
+lib: lib/libbravais.a
+#lib: $(if $(static),$(BLD)libbravais.a) \
+#        $(if $(shared),$(BLD)libbravais.$(SO_EXT))
 
 # Rules for compiling all source files.
 $(OBJECT_FILES): $(BLD)%.o: $(SRC)%.cpp $(CONFIG_MK)
-	$(MFEM_CXX) $(MFEM_BUILD_FLAGS) -c $(<) -o $(@)
+	$(MFEM_CXX) $(BRAVAIS_FLAGS) -c $(<) -o $(@)
 
 $(BLD)libbravais.a: $(OBJECT_FILES)
 	$(AR) $(ARFLAGS) $(@) $(OBJECT_FILES)
@@ -163,6 +211,12 @@ $(BLD)libbravais.a: $(OBJECT_FILES)
 
 $(BLD)libbravais.$(SO_EXT): $(BLD)libbravais.$(SO_VER)
 	cd $(@D) && ln -sf $(<F) $(@F)
+
+periodic-bravais-mesh: meshing/periodic-bravais-mesh.cpp lib/libbravais.a $(MFEM_LIB_FILE)
+	$(CCC) -o periodic-bravais-mesh meshing/periodic-bravais-mesh.cpp -Llib -lbravais $(LIBS)
+
+display-bravais: meshing/display-bravais.cpp lib/libbravais.a $(MFEM_LIB_FILE)
+	$(CCC) -o display-bravais meshing/display-bravais.cpp -Llib -lbravais $(LIBS)
 
 glvis: override MFEM_DIR = $(MFEM_DIR1)
 glvis:	glvis.cpp lib/libbravais.a $(CONFIG_MK) $(MFEM_LIB_FILE)
