@@ -8177,10 +8177,9 @@ TriclinicLattice::GetFundamentalDomainMesh() const
 }
 
 BravaisLattice *
-BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
-                      double a, double b, double c,
-                      double alpha, double beta, double gamma,
-                      int logging)
+BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
+				  double a, double b, double c,
+				  double alpha, double beta, double gamma) const
 {
    BravaisLattice * bravais = NULL;
 
@@ -8190,7 +8189,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Primitive Linear Lattice
          // lattice_label = "SQR";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling LinearLattice(" << a << ")" << endl;
          }
@@ -8200,7 +8199,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Primitive square Lattice
          // lattice_label = "SQR";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling SquareLattice(" << a << ")" << endl;
          }
@@ -8210,7 +8209,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Hexagonal Lattice
          // lattice_label = "HEX2D";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling HexagonalLattice(" << a << ")" << endl;
          }
@@ -8242,7 +8241,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Cubic Lattice
          // lattice_label = "CUB";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling CubicLattice(" << a << ")" << endl;
          }
@@ -8252,7 +8251,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Face-Centered Cubic Lattice
          // lattice_label = "FCC";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling FaceCenteredCubicLattice(" << a << ")" << endl;
          }
@@ -8262,7 +8261,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // Body-Centered Cubic Lattice
          // lattice_label = "BCC";
          if ( a <= 0.0 ) { a = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling BodyCenteredCubicLattice(" << a << ")" << endl;
          }
@@ -8273,7 +8272,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "TET";
          if ( a <= 0.0 ) { a = 1.0; }
          if ( c <= 0.0 ) { c = 0.5; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling TetragonalLattice("
                  << a << ", " << c << ")" << endl;
@@ -8285,7 +8284,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "BCT";
          if ( a <= 0.0 ) { a = 1.0; }
          if ( c <= 0.0 ) { c = 0.5; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling BodyCenteredTetragonalLattice("
                  << a << ", " << c << ")" << endl;
@@ -8298,7 +8297,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 0.8; }
          if ( c <= 0.0 ) { c = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling OrthorhombicLattice("
                  << a << ", " << b << ", " << c << ")" << endl;
@@ -8311,7 +8310,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 0.8; }
          if ( c <= 0.0 ) { c = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling FaceCenteredOrthorhombicLattice("
                  << a << ", " << b << ", " << c << ")" << endl;
@@ -8324,7 +8323,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 0.8; }
          if ( c <= 0.0 ) { c = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling BodyCenteredOrthorhombicLattice("
                  << a << ", " << b << ", " << c << ")" << endl;
@@ -8337,7 +8336,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 1.0; }
          if ( c <= 0.0 ) { c = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling BaseCenteredOrthorhombicLattice("
                  << a << ", " << b << ", " << c << ")" << endl;
@@ -8349,7 +8348,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "HEX";
          if ( a <= 0.0 ) { a = 1.0; }
          if ( c <= 0.0 ) { c = 1.0; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling HexagonalPrismLattice(" << a << ")" << endl;
          }
@@ -8360,7 +8359,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "RHL";
          if (     a <= 0.0 ) { a = 1.0; }
          if ( alpha <= 0.0 ) { alpha = 0.25 * M_PI; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling RhombohedralLattice("
                  << a << ", " << alpha << ")" << endl;
@@ -8374,7 +8373,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if (     b <= 0.0 ) { b = 1.0; }
          if (     c <= 0.0 ) { c = 1.0; }
          if ( alpha <= 0.0 ) { alpha = 0.25 * M_PI; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling MonoclinicLattice("
                  << a << ", " << b << ", " << c << ", " << alpha << ")" << endl;
@@ -8388,7 +8387,7 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
          if (     b <= 0.0 ) { b = 1.0; }
          if (     c <= 0.0 ) { c = 1.0; }
          if ( alpha <= 0.0 ) { alpha = 0.25 * M_PI; }
-         if ( logging > 0 )
+         if ( logging_ > 0 )
          {
             cout << "Calling BaseCenteredMonoclinicLattice("
                  << a << ", " << b << ", " << c << ", " << alpha << ")" << endl;
@@ -8423,6 +8422,86 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE lattice_type,
    return bravais;
 }
 
+const string BravaisLatticeFactory::lat_options_1d_ =
+  "Bravais Lattice Types:\n"
+  "\t 1 - Primitive Segment\n";    
+  
+const string BravaisLatticeFactory::lat_options_2d_ =
+  "Bravais Lattice Types:\n"
+  "\t 1 - Primitive Square,\n"
+  "\t 2 - Primitive Hexagonal,\n"
+  "\t 3 - Primitive Rectangular,\n"
+  "\t 4 - Centered Rectangular,\n"
+  "\t 5 - Primitive Oblique\n";    
+  
+const string BravaisLatticeFactory::lat_options_3d_ =
+  "Bravais Lattice Types:\n"
+  "\t 1 - Primitive Cubic,\n"
+  "\t 2 - Face-Centered Cubic,\n"
+  "\t 3 - Body-Centered Cubic,\n"
+  "\t 4 - Primitive Tetragonal,\n"
+  "\t 5 - Body-Centered Tetragonal,\n"
+  "\t 6 - Primitive Orthorhombic,\n"
+  "\t 7 - Face-Centered Orthorhombic,\n"
+  "\t 8 - Body-Centered Orthorhombic,\n"
+  "\t 9 - Base-Centered Orthorhombic,\n"
+  "\t10 - Primitive Hexagonal Prism,\n"
+  "\t11 - Primitive Rhombohedral,\n"
+  "\t12 - Primitive Monoclinic,\n"
+  "\t13 - Base-Centered Monoclinic,\n"
+  "\t14 - Primitive Triclinic\n";    
+  
+const string BravaisLatticeFactory::lat_options_ =
+  "Bravais Lattice Types:\n"
+  "1D Bravais Lattices (1 types)\n"
+  "\t 1 - Primitive Segment,\n"
+  "2D Bravais Lattices (5 types)\n"
+  "\t 2 - Primitive Square,\n"
+  "\t 3 - Primitive Hexagonal,\n"
+  "\t 4 - Primitive Rectangular,\n"
+  "\t 5 - Centered Rectangular,\n"
+  "\t 6 - Primitive Oblique,\n"
+  "3D Bravais Lattices (14 types)\n"
+  "\t 7 - Primitive Cubic,\n"
+  "\t 8 - Face-Centered Cubic,\n"
+  "\t 9 - Body-Centered Cubic,\n"
+  "\t10 - Primitive Tetragonal,\n"
+  "\t11 - Body-Centered Tetragonal,\n"
+  "\t12 - Primitive Orthorhombic,\n"
+  "\t13 - Face-Centered Orthorhombic,\n"
+  "\t14 - Body-Centered Orthorhombic,\n"
+  "\t15 - Base-Centered Orthorhombic,\n"
+  "\t16 - Primitive Hexagonal Prism,\n"
+  "\t17 - Primitive Rhombohedral,\n"
+  "\t18 - Primitive Monoclinic,\n"
+  "\t19 - Base-Centered Monoclinic,\n"
+  "\t20 - Primitive Triclinic\n";    
+
+  //const char ** BravaisLatticeFactory::lat_names_(20);
+  //const char * BravaisLatticeFactory::lat_names_[20] = {
+const std::string BravaisLatticeFactory::lat_names_[20] = {
+   "Primitive Segment",
+   "Primitive Square",
+   "Primitive Hexagonal",
+   "Primitive Rectangular",
+   "Centered Rectangular",
+   "Primitive Oblique",
+   "Primitive Cubic",
+   "Face-Centered Cubic",
+   "Body-Centered Cubic",
+   "Primitive Tetragonal",
+   "Body-Centered Tetragonal",
+   "Primitive Orthorhombic",
+   "Face-Centered Orthorhombic",
+   "Body-Centered Orthorhombic",
+   "Base-Centered Orthorhombic",
+   "Primitive Hexagonal Prism",
+   "Primitive Rhombohedral",
+   "Primitive Monoclinic",
+   "Base-Centered Monoclinic",
+   "Primitive Triclinic"
+};
+  
 void
 ModeCoefficient::SetAmplitude(double a)
 {
