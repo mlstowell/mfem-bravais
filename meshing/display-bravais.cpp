@@ -133,63 +133,70 @@ int main(int argc, char *argv[])
       if (print_char)
       {
          cout << endl;
-         cout << "Lattice Type:    " << fact.GetLatticeName(blType) << endl;
-	 cout << "Lattice Spacing: " << a;
-	 if (fact.Is2D(blType) || fact.Is3D(blType))
-	 {
-	   cout << " " << b;
-	 }
-	 if (fact.Is3D(blType))
-	 {
-	   cout << " " << c;
-	 }
-	 cout << endl;
-	 if (fact.Is2D(blType))
-	 {	 
-	   cout << "Lattice Angle:   " << 180.0 * gamma / M_PI << endl;
-	 }
-	 else if (fact.Is3D(blType))
-	 {
-	   cout << "Lattice Angles: "
-		<< " " << 180.0 * alpha / M_PI
-		<< " " << 180.0 * beta / M_PI
-		<< " " << 180.0 * gamma / M_PI
-		<< endl;
-	 }
-	 // cout << "Basis function order:  " << bOrder << endl;
-	 // cout << "Map Type:              " << mapTypeStr(mType) << endl;
+         cout << "Lattice Type:     " << fact.GetLatticeName(blType) << endl;
+         if (fact.Is1D(blType))
+         {
+            cout << "Lattice Spacing:  " << a;
+         }
+         else if (fact.Is2D(blType))
+         {
+            cout << "Lattice Spacings: " << a << " " << b << endl;
+            cout << "Lattice Angle:    " << 180.0 * gamma / M_PI << endl;
+         }
+         else if (fact.Is3D(blType))
+         {
+            cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
+            cout << "Lattice Angles:   "
+                 << " " << 180.0 * alpha / M_PI
+                 << " " << 180.0 * beta / M_PI
+                 << " " << 180.0 * gamma / M_PI
+                 << endl;
+         }
+         // cout << "Basis function order:  " << bOrder << endl;
+         // cout << "Map Type:              " << mapTypeStr(mType) << endl;
       }
       delete lat; lat = fact.GetLattice(blType, a, b, c, alpha, beta, gamma);
       if (lat)
       {
-      	delete mesh; mesh = lat->GetWignerSeitzMesh();
-	if (mesh)
-	  {
-	    if (visualization)
-	      {
-		//sock << "keys q\n" << flush;
-		sock << "mesh\n" << *mesh << flush;
-		//mesh->Print(sock);
-	      }
-	  }
-	else
-	  {
-	    cerr << "Mesh construction failed.  Try again" << endl;
-	    if (!sock.is_open()) { sock.open(vishost, visport); }
-	  }
+         if (fact.Is1D(blType))
+         {
+            dynamic_cast<BravaisLattice1D*>(lat)->GetAxialLength(a);
+         }
+         else if (fact.Is2D(blType))
+         {
+            BravaisLattice2D * lat2d = dynamic_cast<BravaisLattice2D*>(lat);
+            lat2d->GetAxialLengths(a, b);
+            lat2d->GetInteraxialAngle(gamma);
+         }
+         else if (fact.Is3D(blType))
+         {
+            BravaisLattice3D * lat3d = dynamic_cast<BravaisLattice3D*>(lat);
+            lat3d->GetAxialLengths(a, b, c);
+            lat3d->GetInteraxialAngles(alpha, beta, gamma);
+         }
+
+         delete mesh; mesh = lat->GetWignerSeitzMesh();
+         if (mesh)
+         {
+            if (visualization)
+            {
+               sock << "keys q\n" << flush;
+               sock.open(vishost, visport);
+               sock << "mesh\n" << *mesh << flush;
+               //mesh->Print(sock);
+            }
+         }
+         else
+         {
+            cerr << "Mesh construction failed.  Try again" << endl;
+            if (!sock.is_open()) { sock.open(vishost, visport); }
+         }
       }
-      else	
+      else
       {
-	cerr << "Lattice construction failed.  Try again" << endl;
-	if (!sock.is_open()) { sock.open(vishost, visport); }
+         cerr << "Lattice construction failed.  Try again" << endl;
+         if (!sock.is_open()) { sock.open(vishost, visport); }
       }
-      /*
-      if ( update_basis(sock, vwl, eType, bType, bOrder, mType,
-			dType, defData, visualization) )
-      {
-         cerr << "Invalid combination of basis info (try again)" << endl;
-      }
-      */
       if (!visualization) { break; }
 
       print_char = false;
@@ -231,87 +238,117 @@ int main(int argc, char *argv[])
       }
       if (mk == 's')
       {
-	if (fact.Is1D(blType))
-	{
-	  double a_tmp = -1.0;
-	  cout << "Lattice Spacing: " << a << endl;
-	  cout << "enter new lattice spacing --> " << flush;
-	  cin >> a_tmp;
-	  if (a_tmp > 0.0)
-	  {
-	    a = a_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
-	  }
-	}
-	else if (fact.Is2D(blType))
-	{
-	  double a_tmp = -1.0;;
-	  double b_tmp = -1.0;;
-	  cout << "Lattice Spacings: " << a << " " << b << endl;
-	  cout << "enter new lattice spacings --> " << flush;
-	  cin >> a_tmp;
-	  if (a_tmp > 0.0)
-	  {
-	    a = a_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
-	  }
-	  cin >> b_tmp;
-	  if (b_tmp > 0.0)
-	  {
-	    b = b_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
-	  }
-	}
-	else if (fact.Is3D(blType))
-	{
-	  double a_tmp = -1.0;;
-	  double b_tmp = -1.0;;
-	  double c_tmp = -1.0;;
-	  cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
-	  cout << "enter new lattice spacings --> " << flush;
-	  cin >> a_tmp;
-	  if (a_tmp > 0.0)
-	  {
-	    a = a_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
-	  }
-	  cin >> b_tmp;
-	  if (b_tmp > 0.0)
-	  {
-	    b = b_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
-	  }
-	  cin >> c_tmp;
-	  if (c_tmp > 0.0)
-	  {
-	    c = c_tmp;
-	    print_char = true;
-	  }
-	  else
-	  {
-	     cerr << "invalid lattice spacing \"" << c_tmp << "\"." << endl;
-	  }
-	}
+         if (fact.Is1D(blType))
+         {
+            double a_tmp = -1.0;
+            cout << "Lattice Spacing: " << a << endl;
+            cout << "enter new lattice spacing --> " << flush;
+            cin >> a_tmp;
+            if (a_tmp > 0.0)
+            {
+               a = a_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+            }
+         }
+         else if (fact.Is2D(blType))
+         {
+            double a_tmp = -1.0;
+            double b_tmp = -1.0;
+            cout << "Lattice Spacings: " << a << " " << b << endl;
+            cout << "enter new lattice spacings --> " << flush;
+            cin >> a_tmp;
+            if (a_tmp > 0.0)
+            {
+               a = a_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+            }
+            cin >> b_tmp;
+            if (b_tmp > 0.0)
+            {
+               b = b_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
+            }
+         }
+         else if (fact.Is3D(blType))
+         {
+            double a_tmp = -1.0;
+            double b_tmp = -1.0;
+            double c_tmp = -1.0;
+            cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
+            cout << "enter new lattice spacings --> " << flush;
+            cin >> a_tmp;
+            if (a_tmp > 0.0)
+            {
+               a = a_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+            }
+            cin >> b_tmp;
+            if (b_tmp > 0.0)
+            {
+               b = b_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
+            }
+            cin >> c_tmp;
+            if (c_tmp > 0.0)
+            {
+               c = c_tmp;
+               print_char = true;
+            }
+            else
+            {
+               cerr << "invalid lattice spacing \"" << c_tmp << "\"." << endl;
+            }
+         }
+      }
+      if (mk == 'a')
+      {
+         if (fact.Is2D(blType))
+         {
+            double gamma_tmp = NAN;
+            cout << "Lattice Angle: " << 180.0 * gamma / M_PI << endl;
+            cout << "enter new lattice angle, 0 < gamma < 90 (in degrees) --> "
+                 << flush;
+            cin >> gamma_tmp;
+            gamma = M_PI * gamma_tmp / 180.0;
+            print_char = true;
+         }
+         else if (fact.Is3D(blType))
+         {
+            double alpha_tmp = -1.0;
+            double beta_tmp  = -1.0;
+            double gamma_tmp = -1.0;
+            cout << "Lattice Angles: " << 180.0 * alpha / M_PI
+                 << " " << 180.0 * beta / M_PI
+                 << " " << 180.0 * gamma / M_PI << endl;
+            cout << "enter new lattice angles --> " << flush;
+            cin >> alpha_tmp;
+            cin >> beta_tmp;
+            cin >> gamma_tmp;
+            alpha = M_PI * alpha_tmp / 180.0;
+            beta  = M_PI * beta_tmp  / 180.0;
+            gamma = M_PI * gamma_tmp / 180.0;
+            print_char = true;
+         }
       }
       /*
       if (mk == 'b')
