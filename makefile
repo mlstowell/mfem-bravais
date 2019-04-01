@@ -186,6 +186,8 @@ OBJECT_FILES = $(OBJECT_FILES1:.c=.o)
 # generated with 'echo lib/*.h*'
 HEADER_FILES = lib/bravais.hpp
 
+APP_FILES = meshing/display-bravais.cpp
+
 # Targets
 
 .PHONY: lib clean distclean install status info opt debug style
@@ -263,7 +265,7 @@ status info:
 	@true
 
 ASTYLE = astyle --options=$(MFEM_DIR1)/config/mfem.astylerc
-ALL_FILES = ./glvis.cpp $(SOURCE_FILES) $(HEADER_FILES)
+ALL_FILES = $(SOURCE_FILES) $(HEADER_FILES) $(APP_FILES)
 EXT_FILES = 
 FORMAT_FILES := $(filter-out $(EXT_FILES), $(ALL_FILES))
 
