@@ -217,26 +217,6 @@ int main(int argc, char *argv[])
       {
          lt = 0;
 	 cout << fact.GetLatticeOptionStr();
-	 /*
-	 cout << "valid lattice types:\n";
-         if ( basisIs1D(bType) )
-         {
-            cout <<
-                 "1) Segment\n";
-         }
-         if ( basisIs2D(bType) )
-         {
-            cout <<
-                 "2) Triangle\n"
-                 "3) Quadrilateral\n";
-         }
-         if ( basisIs3D(bType) )
-         {
-            cout <<
-                 "4) Tetrahedron\n"
-                 "5) Hexahedron\n";
-         }
-	 */
          cout << "enter new lattice type --> " << flush;
          cin >> lt;
          if ( lt <= 0 || lt > (int)PRIMITIVE_TRICLINIC )
@@ -248,6 +228,90 @@ int main(int argc, char *argv[])
 	   blType = (BRAVAIS_LATTICE_TYPE)lt;
 	   print_char = true;
          }
+      }
+      if (mk == 's')
+      {
+	if (fact.Is1D(blType))
+	{
+	  double a_tmp = -1.0;
+	  cout << "Lattice Spacing: " << a << endl;
+	  cout << "enter new lattice spacing --> " << flush;
+	  cin >> a_tmp;
+	  if (a_tmp > 0.0)
+	  {
+	    a = a_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+	  }
+	}
+	else if (fact.Is2D(blType))
+	{
+	  double a_tmp = -1.0;;
+	  double b_tmp = -1.0;;
+	  cout << "Lattice Spacings: " << a << " " << b << endl;
+	  cout << "enter new lattice spacings --> " << flush;
+	  cin >> a_tmp;
+	  if (a_tmp > 0.0)
+	  {
+	    a = a_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+	  }
+	  cin >> b_tmp;
+	  if (b_tmp > 0.0)
+	  {
+	    b = b_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
+	  }
+	}
+	else if (fact.Is3D(blType))
+	{
+	  double a_tmp = -1.0;;
+	  double b_tmp = -1.0;;
+	  double c_tmp = -1.0;;
+	  cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
+	  cout << "enter new lattice spacings --> " << flush;
+	  cin >> a_tmp;
+	  if (a_tmp > 0.0)
+	  {
+	    a = a_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << a_tmp << "\"." << endl;
+	  }
+	  cin >> b_tmp;
+	  if (b_tmp > 0.0)
+	  {
+	    b = b_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << b_tmp << "\"." << endl;
+	  }
+	  cin >> c_tmp;
+	  if (c_tmp > 0.0)
+	  {
+	    c = c_tmp;
+	    print_char = true;
+	  }
+	  else
+	  {
+	     cerr << "invalid lattice spacing \"" << c_tmp << "\"." << endl;
+	  }
+	}
       }
       /*
       if (mk == 'b')
