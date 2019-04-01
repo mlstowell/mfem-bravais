@@ -68,12 +68,12 @@ int main(int argc, char *argv[])
    double alpha = NAN;
    double beta  = NAN;
    double gamma = NAN;
-   
+
    bool visualization = true;
 
    OptionsParser args(argc, argv);
    args.AddOption(&lt, "-lt", "--lattice-type",
-		  BravaisLatticeFactory::GetLatticeOptionStr().c_str());
+                  BravaisLatticeFactory::GetLatticeOptionStr().c_str());
    args.AddOption(&a, "-a", "--a",
                   "Lattice spacing a");
    args.AddOption(&b, "-b", "--b",
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
    gamma = (isnan(gamma)) ? 0.0 : (M_PI * gamma / 180.0);
 
    BRAVAIS_LATTICE_TYPE blType = (BRAVAIS_LATTICE_TYPE)lt;
-   
+
    BravaisLatticeFactory fact;
 
    BravaisLattice * lat = NULL;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
    int  visport   = 19916;
    socketstream sock(vishost, visport);
    sock.precision(8);
-   
+
    // Collect user input
    bool print_char = true;
    while (true)
@@ -210,13 +210,13 @@ int main(int argc, char *argv[])
       }
       if (mk == 'c')
       {
-	 sock << "keys q";
-	 break;
+         sock << "keys q";
+         break;
       }
       if (mk == 'l')
       {
          lt = 0;
-	 cout << fact.GetLatticeOptionStr();
+         cout << fact.GetLatticeOptionStr();
          cout << "enter new lattice type --> " << flush;
          cin >> lt;
          if ( lt <= 0 || lt > (int)PRIMITIVE_TRICLINIC )
@@ -224,9 +224,9 @@ int main(int argc, char *argv[])
             cout << "invalid lattice type \"" << lt << "\"." << endl;
          }
          else
-	 {
-	   blType = (BRAVAIS_LATTICE_TYPE)lt;
-	   print_char = true;
+         {
+            blType = (BRAVAIS_LATTICE_TYPE)lt;
+            print_char = true;
          }
       }
       if (mk == 's')
@@ -520,7 +520,7 @@ int main(int argc, char *argv[])
    // Cleanup
    delete mesh;
    delete lat;
-   
+
    // Exit
    return 0;
 }

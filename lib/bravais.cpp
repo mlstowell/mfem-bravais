@@ -1359,7 +1359,7 @@ ObliqueLattice::ObliqueLattice(double a, double b, double gamma)
    : BravaisLattice2D(a, b, gamma)
 {
    MFEM_ASSERT( a_ <= b_,
-                "Monoclinic unit cells must have a <= b!");
+                "Oblique unit cells must have a <= b!");
    MFEM_ASSERT( b_ * cos(gamma_) < a_ && gamma_ < 0.5 * M_PI,
                 "Oblique unit cells must have arccos(a/b) < gamma < pi/2!");
 
@@ -8178,8 +8178,8 @@ TriclinicLattice::GetFundamentalDomainMesh() const
 
 BravaisLattice *
 BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
-				  double a, double b, double c,
-				  double alpha, double beta, double gamma) const
+                                  double a, double b, double c,
+                                  double alpha, double beta, double gamma) const
 {
    BravaisLattice * bravais = NULL;
 
@@ -8234,7 +8234,9 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "OBL";
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 1.0; }
-         if ( gamma <= 0.0 ) { gamma = 0.4 * M_PI; }
+         if ( b < a ) { b = a; }
+         if ( gamma <= acos(a / b) || gamma >= 0.5 * M_PI )
+         { gamma = 0.25 * M_PI + 0.5 * acos(a / b); }
          bravais = new ObliqueLattice(a, b, gamma);
          break;
       case PRIMITIVE_CUBIC:
@@ -8423,63 +8425,64 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
 }
 
 const string BravaisLatticeFactory::lat_options_1d_ =
-  "Bravais Lattice Types:\n"
-  "\t 1 - Primitive Segment\n";    
-  
-const string BravaisLatticeFactory::lat_options_2d_ =
-  "Bravais Lattice Types:\n"
-  "\t 1 - Primitive Square,\n"
-  "\t 2 - Primitive Hexagonal,\n"
-  "\t 3 - Primitive Rectangular,\n"
-  "\t 4 - Centered Rectangular,\n"
-  "\t 5 - Primitive Oblique\n";    
-  
-const string BravaisLatticeFactory::lat_options_3d_ =
-  "Bravais Lattice Types:\n"
-  "\t 1 - Primitive Cubic,\n"
-  "\t 2 - Face-Centered Cubic,\n"
-  "\t 3 - Body-Centered Cubic,\n"
-  "\t 4 - Primitive Tetragonal,\n"
-  "\t 5 - Body-Centered Tetragonal,\n"
-  "\t 6 - Primitive Orthorhombic,\n"
-  "\t 7 - Face-Centered Orthorhombic,\n"
-  "\t 8 - Body-Centered Orthorhombic,\n"
-  "\t 9 - Base-Centered Orthorhombic,\n"
-  "\t10 - Primitive Hexagonal Prism,\n"
-  "\t11 - Primitive Rhombohedral,\n"
-  "\t12 - Primitive Monoclinic,\n"
-  "\t13 - Base-Centered Monoclinic,\n"
-  "\t14 - Primitive Triclinic\n";    
-  
-const string BravaisLatticeFactory::lat_options_ =
-  "Bravais Lattice Types:\n"
-  "1D Bravais Lattices (1 types)\n"
-  "\t 1 - Primitive Segment,\n"
-  "2D Bravais Lattices (5 types)\n"
-  "\t 2 - Primitive Square,\n"
-  "\t 3 - Primitive Hexagonal,\n"
-  "\t 4 - Primitive Rectangular,\n"
-  "\t 5 - Centered Rectangular,\n"
-  "\t 6 - Primitive Oblique,\n"
-  "3D Bravais Lattices (14 types)\n"
-  "\t 7 - Primitive Cubic,\n"
-  "\t 8 - Face-Centered Cubic,\n"
-  "\t 9 - Body-Centered Cubic,\n"
-  "\t10 - Primitive Tetragonal,\n"
-  "\t11 - Body-Centered Tetragonal,\n"
-  "\t12 - Primitive Orthorhombic,\n"
-  "\t13 - Face-Centered Orthorhombic,\n"
-  "\t14 - Body-Centered Orthorhombic,\n"
-  "\t15 - Base-Centered Orthorhombic,\n"
-  "\t16 - Primitive Hexagonal Prism,\n"
-  "\t17 - Primitive Rhombohedral,\n"
-  "\t18 - Primitive Monoclinic,\n"
-  "\t19 - Base-Centered Monoclinic,\n"
-  "\t20 - Primitive Triclinic\n";    
+   "Bravais Lattice Types:\n"
+   "\t 1 - Primitive Segment\n";
 
-  //const char ** BravaisLatticeFactory::lat_names_(20);
-  //const char * BravaisLatticeFactory::lat_names_[20] = {
-const std::string BravaisLatticeFactory::lat_names_[20] = {
+const string BravaisLatticeFactory::lat_options_2d_ =
+   "Bravais Lattice Types:\n"
+   "\t 1 - Primitive Square,\n"
+   "\t 2 - Primitive Hexagonal,\n"
+   "\t 3 - Primitive Rectangular,\n"
+   "\t 4 - Centered Rectangular,\n"
+   "\t 5 - Primitive Oblique\n";
+
+const string BravaisLatticeFactory::lat_options_3d_ =
+   "Bravais Lattice Types:\n"
+   "\t 1 - Primitive Cubic,\n"
+   "\t 2 - Face-Centered Cubic,\n"
+   "\t 3 - Body-Centered Cubic,\n"
+   "\t 4 - Primitive Tetragonal,\n"
+   "\t 5 - Body-Centered Tetragonal,\n"
+   "\t 6 - Primitive Orthorhombic,\n"
+   "\t 7 - Face-Centered Orthorhombic,\n"
+   "\t 8 - Body-Centered Orthorhombic,\n"
+   "\t 9 - Base-Centered Orthorhombic,\n"
+   "\t10 - Primitive Hexagonal Prism,\n"
+   "\t11 - Primitive Rhombohedral,\n"
+   "\t12 - Primitive Monoclinic,\n"
+   "\t13 - Base-Centered Monoclinic,\n"
+   "\t14 - Primitive Triclinic\n";
+
+const string BravaisLatticeFactory::lat_options_ =
+   "Bravais Lattice Types:\n"
+   "1D Bravais Lattices (1 types)\n"
+   "\t 1 - Primitive Segment,\n"
+   "2D Bravais Lattices (5 types)\n"
+   "\t 2 - Primitive Square,\n"
+   "\t 3 - Primitive Hexagonal,\n"
+   "\t 4 - Primitive Rectangular,\n"
+   "\t 5 - Centered Rectangular,\n"
+   "\t 6 - Primitive Oblique,\n"
+   "3D Bravais Lattices (14 types)\n"
+   "\t 7 - Primitive Cubic,\n"
+   "\t 8 - Face-Centered Cubic,\n"
+   "\t 9 - Body-Centered Cubic,\n"
+   "\t10 - Primitive Tetragonal,\n"
+   "\t11 - Body-Centered Tetragonal,\n"
+   "\t12 - Primitive Orthorhombic,\n"
+   "\t13 - Face-Centered Orthorhombic,\n"
+   "\t14 - Body-Centered Orthorhombic,\n"
+   "\t15 - Base-Centered Orthorhombic,\n"
+   "\t16 - Primitive Hexagonal Prism,\n"
+   "\t17 - Primitive Rhombohedral,\n"
+   "\t18 - Primitive Monoclinic,\n"
+   "\t19 - Base-Centered Monoclinic,\n"
+   "\t20 - Primitive Triclinic\n";
+
+//const char ** BravaisLatticeFactory::lat_names_(20);
+//const char * BravaisLatticeFactory::lat_names_[20] = {
+const std::string BravaisLatticeFactory::lat_names_[20] =
+{
    "Primitive Segment",
    "Primitive Square",
    "Primitive Hexagonal",
@@ -8501,7 +8504,7 @@ const std::string BravaisLatticeFactory::lat_names_[20] = {
    "Base-Centered Monoclinic",
    "Primitive Triclinic"
 };
-  
+
 void
 ModeCoefficient::SetAmplitude(double a)
 {

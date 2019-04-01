@@ -912,7 +912,7 @@ public:
    unsigned int GetNumberTransformations() const { return 8; }
    const DenseMatrix & GetTransformation(int ti) const;
 
-  virtual mfem::Mesh * GetFundamentalDomainMesh() const { return NULL; }
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const { return NULL; }
 
    mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
    mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
@@ -1149,69 +1149,69 @@ BravaisLatticeFactory(BRAVAIS_LATTICE_TYPE type,
 class BravaisLatticeFactory
 {
 private:
-  int logging_;
+   int logging_;
 
-  static const std::string lat_options_1d_;
-  static const std::string lat_options_2d_;
-  static const std::string lat_options_3d_;
-  static const std::string lat_options_;
+   static const std::string lat_options_1d_;
+   static const std::string lat_options_2d_;
+   static const std::string lat_options_3d_;
+   static const std::string lat_options_;
 
-  // static const std::vector<std::string> lat_names_;
-  // static const char * lat_names_[20];
-  static const std::string lat_names_[20];
-  
+   // static const std::vector<std::string> lat_names_;
+   // static const char * lat_names_[20];
+   static const std::string lat_names_[20];
+
 public:
-  BravaisLatticeFactory(int logging = 0) : logging_(logging) {}
+   BravaisLatticeFactory(int logging = 0) : logging_(logging) {}
 
-  static bool Is1D(BRAVAIS_LATTICE_TYPE type)
-  { return type == PRIMITIVE_SEGMENT; }
-  
-  static bool Is2D(BRAVAIS_LATTICE_TYPE type)
-  { return type >= PRIMITIVE_SQUARE && type <= PRIMITIVE_OBLIQUE; }
-  
-  static bool Is3D(BRAVAIS_LATTICE_TYPE type)
-  { return type >= PRIMITIVE_CUBIC && type <= PRIMITIVE_TRICLINIC; }
-  
-  BravaisLattice * GetLattice(BRAVAIS_LATTICE_TYPE type,
-			      double a, double b, double c,
-			      double alpha, double beta, double gamma) const;
-  BravaisLattice1D * Get1DLattice(BRAVAIS_LATTICE_TYPE type,
-				  double a) const
-  {
-    return dynamic_cast<BravaisLattice1D*>(GetLattice(type,
-						      a, 1.0, 1.0,
-						      0.0, 0.0, 0.0));
-  }
+   static bool Is1D(BRAVAIS_LATTICE_TYPE type)
+   { return type == PRIMITIVE_SEGMENT; }
 
-  BravaisLattice2D * Get2DLattice(BRAVAIS_LATTICE_TYPE type2d,
-				  double a, double b, double gamma) const
-  {
-    BRAVAIS_LATTICE_TYPE type = (BRAVAIS_LATTICE_TYPE)(type2d + 1);
-    return dynamic_cast<BravaisLattice2D*>(GetLattice(type,
-						      a, b, 1.0,
-						      0.0, 0.0, gamma));
-  }
+   static bool Is2D(BRAVAIS_LATTICE_TYPE type)
+   { return type >= PRIMITIVE_SQUARE && type <= PRIMITIVE_OBLIQUE; }
 
-  BravaisLattice3D * Get3DLattice(BRAVAIS_LATTICE_TYPE type3d,
-				  double a, double b, double c,
-				  double alpha, double beta, double gamma
-				  ) const
-  {
-    BRAVAIS_LATTICE_TYPE type = (BRAVAIS_LATTICE_TYPE)(type3d + 5);
-    return dynamic_cast<BravaisLattice3D*>(GetLattice(type,
-						      a, b, c,
-						      alpha, beta, gamma));
-  }
+   static bool Is3D(BRAVAIS_LATTICE_TYPE type)
+   { return type >= PRIMITIVE_CUBIC && type <= PRIMITIVE_TRICLINIC; }
 
-  static const std::string & Get1DLatticeOptionStr() { return lat_options_1d_; }
-  static const std::string & Get2DLatticeOptionStr() { return lat_options_2d_; }
-  static const std::string & Get3DLatticeOptionStr() { return lat_options_3d_; }
-  static const std::string & GetLatticeOptionStr() { return lat_options_; }
+   BravaisLattice * GetLattice(BRAVAIS_LATTICE_TYPE type,
+                               double a, double b, double c,
+                               double alpha, double beta, double gamma) const;
+   BravaisLattice1D * Get1DLattice(BRAVAIS_LATTICE_TYPE type,
+                                   double a) const
+   {
+      return dynamic_cast<BravaisLattice1D*>(GetLattice(type,
+                                                        a, 1.0, 1.0,
+                                                        0.0, 0.0, 0.0));
+   }
 
-  static const std::string & GetLatticeName(BRAVAIS_LATTICE_TYPE type)
-  { return lat_names_[(int)type - 1]; }
+   BravaisLattice2D * Get2DLattice(BRAVAIS_LATTICE_TYPE type2d,
+                                   double a, double b, double gamma) const
+   {
+      BRAVAIS_LATTICE_TYPE type = (BRAVAIS_LATTICE_TYPE)(type2d + 1);
+      return dynamic_cast<BravaisLattice2D*>(GetLattice(type,
+                                                        a, b, 1.0,
+                                                        0.0, 0.0, gamma));
+   }
+
+   BravaisLattice3D * Get3DLattice(BRAVAIS_LATTICE_TYPE type3d,
+                                   double a, double b, double c,
+                                   double alpha, double beta, double gamma
+                                  ) const
+   {
+      BRAVAIS_LATTICE_TYPE type = (BRAVAIS_LATTICE_TYPE)(type3d + 5);
+      return dynamic_cast<BravaisLattice3D*>(GetLattice(type,
+                                                        a, b, c,
+                                                        alpha, beta, gamma));
+   }
+
+   static const std::string & Get1DLatticeOptionStr() { return lat_options_1d_; }
+   static const std::string & Get2DLatticeOptionStr() { return lat_options_2d_; }
+   static const std::string & Get3DLatticeOptionStr() { return lat_options_3d_; }
+   static const std::string & GetLatticeOptionStr() { return lat_options_; }
+
+   static const std::string & GetLatticeName(BRAVAIS_LATTICE_TYPE type)
+   { return lat_names_[(int)type - 1]; }
 };
-  
+
 /// ModeCoefficient is an abstract base class for scalar coefficients
 /// which implements Fourier modes in 3D.  The modes are indexed using
 /// three integers which can take any positive or negative value.  The
