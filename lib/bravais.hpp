@@ -66,9 +66,11 @@ class BravaisLattice
 public:
    virtual ~BravaisLattice() {}
 
-   inline BRAVAIS_LATTICE_TYPE GetLatticeType() { return type_; }
-   inline std::string &   GetLatticeTypeLabel() { return label_; }
+   inline BRAVAIS_LATTICE_TYPE GetLatticeType() const { return type_; }
+   inline const std::string & GetLatticeTypeLabel() const { return label_; }
 
+   const std::string & GetParameterBoundStr() const { return bounds_str_; }  
+  
    inline unsigned int GetDim() const { return dim_; }
    inline double GetUnitCellVolume() const { return vol_; }
    inline double GetBrillouinZoneVolume() const { return bz_vol_; }
@@ -155,6 +157,7 @@ protected:
    std::vector< std::vector< int    > > path_;
 
    std::string label_;
+   std::string bounds_str_;
    BRAVAIS_LATTICE_TYPE type_;
 
    mutable DenseMatrix T_;

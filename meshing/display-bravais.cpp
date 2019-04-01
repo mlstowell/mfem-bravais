@@ -130,31 +130,6 @@ int main(int argc, char *argv[])
    bool print_char = true;
    while (true)
    {
-      if (print_char)
-      {
-         cout << endl;
-         cout << "Lattice Type:     " << fact.GetLatticeName(blType) << endl;
-         if (fact.Is1D(blType))
-         {
-            cout << "Lattice Spacing:  " << a;
-         }
-         else if (fact.Is2D(blType))
-         {
-            cout << "Lattice Spacings: " << a << " " << b << endl;
-            cout << "Lattice Angle:    " << 180.0 * gamma / M_PI << endl;
-         }
-         else if (fact.Is3D(blType))
-         {
-            cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
-            cout << "Lattice Angles:   "
-                 << " " << 180.0 * alpha / M_PI
-                 << " " << 180.0 * beta / M_PI
-                 << " " << 180.0 * gamma / M_PI
-                 << endl;
-         }
-         // cout << "Basis function order:  " << bOrder << endl;
-         // cout << "Map Type:              " << mapTypeStr(mType) << endl;
-      }
       delete lat; lat = fact.GetLattice(blType, a, b, c, alpha, beta, gamma);
       if (lat)
       {
@@ -196,6 +171,32 @@ int main(int argc, char *argv[])
       {
          cerr << "Lattice construction failed.  Try again" << endl;
          if (!sock.is_open()) { sock.open(vishost, visport); }
+      }
+      if (print_char)
+      {
+         cout << endl;
+         cout << "Lattice Type:     " << fact.GetLatticeName(blType) << endl;
+	 cout << "Parameters:       " << lat->GetParameterBoundStr() << endl;
+         if (fact.Is1D(blType))
+         {
+            cout << "Lattice Spacing:  " << a;
+         }
+         else if (fact.Is2D(blType))
+         {
+            cout << "Lattice Spacings: " << a << " " << b << endl;
+            cout << "Lattice Angle:    " << 180.0 * gamma / M_PI << endl;
+         }
+         else if (fact.Is3D(blType))
+         {
+            cout << "Lattice Spacings: " << a << " " << b << " " << c << endl;
+            cout << "Lattice Angles:   "
+                 << " " << 180.0 * alpha / M_PI
+                 << " " << 180.0 * beta / M_PI
+                 << " " << 180.0 * gamma / M_PI
+                 << endl;
+         }
+         // cout << "Basis function order:  " << bOrder << endl;
+         // cout << "Map Type:              " << mapTypeStr(mType) << endl;
       }
       if (!visualization) { break; }
 

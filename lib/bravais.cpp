@@ -398,6 +398,8 @@ LinearLattice::LinearLattice(double a)
    label_ = "LIN";
    type_  = PRIMITIVE_SEGMENT;
 
+   bounds_str_ = "0 < a";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] = 1.0;
 
@@ -540,6 +542,8 @@ SquareLattice::SquareLattice(double a)
 {
    label_ = "SQR";
    type_  = PRIMITIVE_SQUARE;
+
+   bounds_str_ = "0 < a";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = 1.0; lat_vecs_[0][1] = 0.0;
@@ -739,6 +743,8 @@ HexagonalLattice::HexagonalLattice(double a)
 {
    label_ = "HEX2D";
    type_  = PRIMITIVE_HEXAGONAL;
+
+   bounds_str_ = "0 < a";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.5 * a_;
@@ -969,6 +975,8 @@ RectangularLattice::RectangularLattice(double a, double b)
    label_ = "RECT";
    type_  = PRIMITIVE_RECTANGULAR;
 
+   bounds_str_ = "0 < a && 0 < b";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =  a_; lat_vecs_[0][1] = 0.0;
    lat_vecs_[1][0] = 0.0; lat_vecs_[1][1] =  b_;
@@ -1156,6 +1164,8 @@ CenteredRectangularLattice::CenteredRectangularLattice(double a, double b)
 {
    label_ = ( b_ < a_ )?"CR1":"CR2";
    type_  = CENTERED_RECTANGULAR;
+
+   bounds_str_ = "0 < b < a || 0 < a < b";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = 0.5 * a_; lat_vecs_[0][1] = -0.5 * b_;
@@ -1365,6 +1375,8 @@ ObliqueLattice::ObliqueLattice(double a, double b, double gamma)
 
    label_ = "OBL";
    type_  = PRIMITIVE_OBLIQUE;
+
+   bounds_str_ = "0 < a <= b && acos(a / b) < gamma < pi / 2";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = a_; lat_vecs_[0][1] = 0.0;
@@ -1619,6 +1631,8 @@ CubicLattice::CubicLattice(double a)
 {
    label_ = "CUB";
    type_  = PRIMITIVE_CUBIC;
+
+   bounds_str_ = "0 < a";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = 1.0; lat_vecs_[0][1] = 0.0; lat_vecs_[0][2] = 0.0;
@@ -2058,6 +2072,8 @@ FaceCenteredCubicLattice::FaceCenteredCubicLattice(double a)
    label_ = "FCC";
    type_  = FACE_CENTERED_CUBIC;
 
+   bounds_str_ = "0 < a";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.0; lat_vecs_[0][1] =  0.5; lat_vecs_[0][2] =  0.5;
    lat_vecs_[1][0] =  0.5; lat_vecs_[1][1] =  0.0; lat_vecs_[1][2] =  0.5;
@@ -2335,6 +2351,8 @@ BodyCenteredCubicLattice::BodyCenteredCubicLattice(double a)
 {
    label_ = "BCC";
    type_  = BODY_CENTERED_CUBIC;
+
+   bounds_str_ = "0 < a";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = -0.5; lat_vecs_[0][1] =  0.5; lat_vecs_[0][2] =  0.5;
@@ -2724,6 +2742,8 @@ TetragonalLattice::TetragonalLattice(double a, double c)
    label_ = "TET";
    type_  = PRIMITIVE_TETRAGONAL;
 
+   bounds_str_ = "0 < a && 0 < c";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =  a_; lat_vecs_[0][1] = 0.0; lat_vecs_[0][2] = 0.0;
    lat_vecs_[1][0] = 0.0; lat_vecs_[1][1] =  a_; lat_vecs_[1][2] = 0.0;
@@ -3002,6 +3022,8 @@ BodyCenteredTetragonalLattice::BodyCenteredTetragonalLattice(double a, double c)
    label_ = ( c_ < a_ )?"BCT1":((c_ < M_SQRT2 * a_)?"BCT12":"BCT2");
 
    type_  = BODY_CENTERED_TETRAGONAL;
+
+   bounds_str_ = "0 < a && 0 < c";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = -0.5 * a_;
@@ -3738,6 +3760,8 @@ OrthorhombicLattice::OrthorhombicLattice(double a, double b, double c)
    label_ = "ORC";
    type_  = PRIMITIVE_ORTHORHOMBIC;
 
+   bounds_str_ = "0 < a && 0 < b && 0 < c";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =  a_; lat_vecs_[0][1] = 0.0; lat_vecs_[0][2] = 0.0;
    lat_vecs_[1][0] = 0.0; lat_vecs_[1][1] =  b_; lat_vecs_[1][2] = 0.0;
@@ -4025,6 +4049,8 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
       label_ = "ORCF3";
       variety_ = 3;
    }
+
+   bounds_str_ = "0 < a && 0 < b && 0 < c";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.0;
@@ -4684,6 +4710,8 @@ BodyCenteredOrthorhombicLattice::BodyCenteredOrthorhombicLattice(double a,
    }
    type_  = BODY_CENTERED_ORTHORHOMBIC;
 
+   bounds_str_ = "0 < a && 0 < b && 0 < c";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] = -0.5 * a_;
    lat_vecs_[0][1] =  0.5 * b_;
@@ -5305,6 +5333,8 @@ BaseCenteredOrthorhombicLattice::BaseCenteredOrthorhombicLattice(double a,
    label_ = "ORCC";
    type_  = BASE_CENTERED_ORTHORHOMBIC;
 
+   bounds_str_ = "0 < a < b && 0 < c";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.5 * a_;
    lat_vecs_[0][1] = -0.5 * b_;
@@ -5616,6 +5646,8 @@ HexagonalPrismLattice::HexagonalPrismLattice(double a, double c)
 {
    label_ = "HEX";
    type_  = PRIMITIVE_HEXAGONAL_PRISM;
+
+   bounds_str_ = "0 < a && 0 < c";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.5 * a_;
@@ -5969,6 +6001,8 @@ RhombohedralLattice::RhombohedralLattice(double a, double alpha)
       label_ = "RHL2";
    }
    type_  = PRIMITIVE_RHOMBOHEDRAL;
+
+   bounds_str_ = "0 < a && 0 < alpha < 2 pi / 3";
 
    double sinh = sin(0.5 * alpha_);
    double cosh = cos(0.5 * alpha_);
@@ -6704,6 +6738,8 @@ MonoclinicLattice::MonoclinicLattice(double a, double b, double c,
    label_ = "MCL";
    type_  = PRIMITIVE_MONOCLINIC;
 
+   bounds_str_ = "0 < a && 0 < b < c && acos(b / c) < alpha < pi / 2";
+
    // Set Lattice Vectors
    lat_vecs_[0][0] =   a_;
    lat_vecs_[0][1] =  0.0;
@@ -7142,6 +7178,8 @@ BaseCenteredMonoclinicLattice::BaseCenteredMonoclinicLattice(double a,
 
    label_ = "MCLC";
    type_  = BASE_CENTERED_MONOCLINIC;
+
+   bounds_str_ = "0 < a && 0 < b < c && acos(b / c) < alpha < pi / 2";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.5 * a_;
@@ -7978,6 +8016,8 @@ TriclinicLattice::TriclinicLattice(double a, double b, double c,
    label_ = "TRI";
    type_  = PRIMITIVE_TRICLINIC;
 
+   bounds_str_ = "0 < a && 0 < b && 0 < c";
+   
    double ca = cos(alpha_);
    double cb = cos(beta_);
    double cg = cos(gamma_);
@@ -8227,6 +8267,7 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "RECTI";
          if ( a <= 0.0 ) { a = 0.5; }
          if ( b <= 0.0 ) { b = 1.0; }
+         if ( b == a   ) { b = 0.5 * a; }
          bravais = new CenteredRectangularLattice(a, b);
          break;
       case PRIMITIVE_OBLIQUE:
@@ -8336,7 +8377,7 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
          // C-Centered Orthorhombic Lattice
          // lattice_label = "ORCC";
          if ( a <= 0.0 ) { a = 0.5; }
-         if ( b <= 0.0 ) { b = 1.0; }
+         if ( b <= a   ) { b = 2.0 * a; }
          if ( c <= 0.0 ) { c = 1.0; }
          if ( logging_ > 0 )
          {
@@ -8373,8 +8414,9 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
          // lattice_label = "MCL";
          if (     a <= 0.0 ) { a = 1.0; }
          if (     b <= 0.0 ) { b = 1.0; }
-         if (     c <= 0.0 ) { c = 1.0; }
-         if ( alpha <= 0.0 ) { alpha = 0.25 * M_PI; }
+         if (     c < b    ) { c = b; }
+         if ( alpha <= acos(b / c) || alpha >= 0.5 * M_PI )
+         { alpha = 0.25 * M_PI + 0.5 * acos(b / c); }
          if ( logging_ > 0 )
          {
             cout << "Calling MonoclinicLattice("
