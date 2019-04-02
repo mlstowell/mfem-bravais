@@ -4033,13 +4033,17 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
 {
    type_  = FACE_CENTERED_ORTHORHOMBIC;
 
-   // Determine lattice variety based on relationships between parameters.
-   if (1.0/(a_*a_) > 1.0/(b_*b_) + 1.0/(c_*c_))
+   double a2 = a_ * a_;
+   double b2 = b_ * b_;
+   double c2 = c_ * c_;
+
+    // Determine lattice variety based on relationships between parameters.
+   if (1.0 / a2 > 1.0 / b2 + 1.0 / c2)
    {
       label_ = "ORCF1";
       variety_= 1;
    }
-   else if (1.0/(a_*a_) < 1.0/(b_*b_) + 1.0/(c_*c_))
+   else if (1.0 / a2 < 1.0 / b2 + 1.0 / c2)
    {
       label_ = "ORCF2";
       variety_ = 2;
@@ -4050,7 +4054,7 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
       variety_ = 3;
    }
 
-   bounds_str_ = "0 < a && 0 < b && 0 < c";
+   bounds_str_ = "0 < a < b < c";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] =  0.0;
@@ -4114,18 +4118,15 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
 
    // Set the face radii
    face_radii_.resize(7);
-   face_radii_[0] = 0.25 * min((b_ * b_ - a_ * a_) / b_,
-                               (c_ * c_ - a_ * a_) / c_);
-   face_radii_[1] =  0.25 * sqrt(a_ * a_ + b_ * b_) *
-                     min(c_ * c_ / sqrt(b_ * b_ * c_ * c_ + a_ * a_ * (b_ * b_ + c_ * c_)),
-                         a_ / b_);
+   face_radii_[0] = 0.25 * min((b2 - a2) / b_, (c2 - a2) / c_);
+   face_radii_[1] = 0.25 * sqrt(a2 + b2) *
+                    min(c2 / sqrt(b2 * c2 + a2 * (b2 + c2)), a_ / b_);
    face_radii_[2] = face_radii_[1];
-   face_radii_[3] = 0.25 * sqrt(a_ * a_ + c_ * c_) *
-                    min(b_ * b_ / sqrt(b_ * b_ * c_ * c_ + a_ * a_ * (b_ * b_ + c_ * c_)),
-                        a_ / c_);
+   face_radii_[3] = 0.25 * sqrt(a2 + c2) *
+                    min(b2 / sqrt(b2 * c2 + a2 * (b2 + c2)), a_ / c_);
    face_radii_[4] = face_radii_[3];
-   face_radii_[5] = 0.25 * a_ * a_ * sqrt((b_ * b_ + c_ * c_)) /
-                    sqrt(b_ * b_ * c_ * c_ + a_ * a_ * (b_ * b_ + c_ * c_));
+   face_radii_[5] = 0.25 * a2 * sqrt((b2 + c2) /
+				     (b2 * c2 + a2 * (b2 + c2)));
    face_radii_[6] = face_radii_[5];
 
    this->SetCellVolumes();
@@ -4134,10 +4135,6 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
    this->SetVectorSizes();
 
    // Set Symmetry Points and Labels
-   double a2 = a_ * a_;
-   double b2 = b_ * b_;
-   double c2 = c_ * c_;
-
    if (variety_ == 1)
    {
       double zeta = 0.25 * (1.0 + a2 / b2 - a2 / c2);
@@ -4384,32 +4381,32 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
 
    // Set Mesh data
    ws_vert_[  0] = -0.50 * a_;
-   ws_vert_[  1] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[  2] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[  1] =  0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[  2] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[  3] = -0.50 * a_;
-   ws_vert_[  4] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[  5] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[  4] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[  5] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[  6] = -0.50 * a_;
-   ws_vert_[  7] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[  8] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[  7] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[  8] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[  9] = -0.50 * a_;
-   ws_vert_[ 10] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 11] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 10] =  0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 11] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 12] =  0.50 * a_;
-   ws_vert_[ 13] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 14] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 13] =  0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 14] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 15] =  0.50 * a_;
-   ws_vert_[ 16] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 17] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 16] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 17] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 18] =  0.50 * a_;
-   ws_vert_[ 19] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 20] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 19] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 20] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 21] =  0.50 * a_;
    ws_vert_[ 22] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
@@ -4420,120 +4417,120 @@ FaceCenteredOrthorhombicLattice::FaceCenteredOrthorhombicLattice(double a,
    ws_vert_[ 26] = -0.25 * c_;
 
    ws_vert_[ 27] =  0.00;
-   ws_vert_[ 28] = -0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 29] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 28] = -0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 29] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 30] = -0.25 * a_;
    ws_vert_[ 31] = -0.25 * b_;
    ws_vert_[ 32] = -0.25 * c_;
 
    ws_vert_[ 33] =  0.00;
-   ws_vert_[ 34] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 35] = -0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 34] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 35] = -0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 36] =  0.25 * a_;
    ws_vert_[ 37] =  0.25 * b_;
    ws_vert_[ 38] =  0.25 * c_;
 
    ws_vert_[ 39] =  0.00;
-   ws_vert_[ 40] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 41] =  0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 40] =  0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 41] =  0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 42] = -0.25 * a_;
    ws_vert_[ 43] =  0.25 * b_;
    ws_vert_[ 44] =  0.25 * c_;
 
    ws_vert_[ 45] =  0.00;
-   ws_vert_[ 46] =  0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 47] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 46] =  0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 47] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 48] =  0.25 * a_;
    ws_vert_[ 49] =  0.25 * b_;
    ws_vert_[ 50] = -0.25 * c_;
 
    ws_vert_[ 51] =  0.00;
-   ws_vert_[ 52] =  0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 53] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 52] =  0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 53] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 54] = -0.25 * a_;
    ws_vert_[ 55] =  0.25 * b_;
    ws_vert_[ 56] = -0.25 * c_;
 
    ws_vert_[ 57] =  0.00;
-   ws_vert_[ 58] =  0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 59] = -0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 58] =  0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 59] = -0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 60] =  0.25 * a_;
    ws_vert_[ 61] = -0.25 * b_;
    ws_vert_[ 62] =  0.25 * c_;
 
    ws_vert_[ 63] =  0.00;
-   ws_vert_[ 64] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[ 65] =  0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[ 64] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[ 65] =  0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[ 66] = -0.25 * a_;
    ws_vert_[ 67] = -0.25 * b_;
    ws_vert_[ 68] =  0.25 * c_;
 
    ws_vert_[ 69] =  0.00;
-   ws_vert_[ 70] = -0.25 * b_ - 0.25 * a_ * a_ / b_;
-   ws_vert_[ 71] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[ 70] = -0.25 * b_ - 0.25 * a2 / b_;
+   ws_vert_[ 71] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[ 72] = -0.25 * a_;
-   ws_vert_[ 73] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
+   ws_vert_[ 73] = -0.25 * b_ + 0.50 * a2 / b_;
    ws_vert_[ 74] = -0.25 * c_;
 
    ws_vert_[ 75] = -0.25 * a_;
    ws_vert_[ 76] = -0.25 * b_;
-   ws_vert_[ 77] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[ 77] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[ 78] = -0.25 * a_;
    ws_vert_[ 79] =  0.25 * b_;
-   ws_vert_[ 80] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[ 80] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[ 81] = -0.25 * a_;
-   ws_vert_[ 82] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
+   ws_vert_[ 82] = -0.25 * b_ + 0.50 * a2 / b_;
    ws_vert_[ 83] =  0.25 * c_;
 
    ws_vert_[ 84] =  0.25 * a_;
-   ws_vert_[ 85] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
+   ws_vert_[ 85] = -0.25 * b_ + 0.50 * a2 / b_;
    ws_vert_[ 86] = -0.25 * c_;
 
    ws_vert_[ 87] =  0.25 * a_;
    ws_vert_[ 88] = -0.25 * b_;
-   ws_vert_[ 89] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[ 89] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[ 90] =  0.25 * a_;
    ws_vert_[ 91] =  0.25 * b_;
-   ws_vert_[ 92] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[ 92] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[ 93] =  0.25 * a_;
-   ws_vert_[ 94] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
+   ws_vert_[ 94] = -0.25 * b_ + 0.50 * a2 / b_;
    ws_vert_[ 95] =  0.25 * c_;
 
    ws_vert_[ 96] = -0.25 * a_;
-   ws_vert_[ 97] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
-   ws_vert_[ 98] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[ 97] = -0.25 * b_ + 0.50 * a2 / b_;
+   ws_vert_[ 98] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[ 99] =  0.25 * a_;
-   ws_vert_[100] = -0.25 * b_ + 0.50 * a_ * a_ / b_;
-   ws_vert_[101] =  0.25 * c_ - 0.50 * a_ * a_ / c_;
+   ws_vert_[100] = -0.25 * b_ + 0.50 * a2 / b_;
+   ws_vert_[101] =  0.25 * c_ - 0.50 * a2 / c_;
 
    ws_vert_[102] =  0.00;
-   ws_vert_[103] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[104] =  0.25 * c_ - 0.75 * a_ * a_ / c_;
+   ws_vert_[103] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[104] =  0.25 * c_ - 0.75 * a2 / c_;
 
    ws_vert_[105] =  0.00;
-   ws_vert_[106] = -0.25 * b_ + 0.75 * a_ * a_ / b_;
-   ws_vert_[107] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[106] = -0.25 * b_ + 0.75 * a2 / b_;
+   ws_vert_[107] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_vert_[108] =  0.00;
-   ws_vert_[109] = -0.25 * b_ + 0.75 * a_ * a_ / b_;
-   ws_vert_[110] = -0.25 * c_ + 0.25 * a_ * a_ / c_;
+   ws_vert_[109] = -0.25 * b_ + 0.75 * a2 / b_;
+   ws_vert_[110] = -0.25 * c_ + 0.25 * a2 / c_;
 
    ws_vert_[111] =  0.00;
-   ws_vert_[112] = -0.25 * b_ + 0.25 * a_ * a_ / b_;
-   ws_vert_[113] =  0.25 * c_ - 0.25 * a_ * a_ / c_;
+   ws_vert_[112] = -0.25 * b_ + 0.25 * a2 / b_;
+   ws_vert_[113] =  0.25 * c_ - 0.25 * a2 / c_;
 
    ws_e2v_[  0] =  0; ws_e2v_[  1] =  1; ws_e2v_[  2] =  2; ws_e2v_[  3] =  3;
    ws_e2v_[  4] = 26; ws_e2v_[  5] = 32; ws_e2v_[  6] = 24; ws_e2v_[  7] = 18;
@@ -4710,7 +4707,7 @@ BodyCenteredOrthorhombicLattice::BodyCenteredOrthorhombicLattice(double a,
    }
    type_  = BODY_CENTERED_ORTHORHOMBIC;
 
-   bounds_str_ = "0 < a && 0 < b && 0 < c";
+   bounds_str_ = "0 < a < b < c";
 
    // Set Lattice Vectors
    lat_vecs_[0][0] = -0.5 * a_;
@@ -5470,6 +5467,53 @@ BaseCenteredOrthorhombicLattice::BaseCenteredOrthorhombicLattice(double a,
    il_[1] [0] = "ZT";     // Z     -> T
 
    // Set Mesh data
+   fd_vert_[ 0] = 0.0;
+   fd_vert_[ 1] = 0.0;
+   fd_vert_[ 2] = 0.0;
+
+   fd_vert_[ 3] = min(0.5 * a_, 0.25 * (a_ * a_ + b_ * b_) / a_);
+   fd_vert_[ 4] = 0.0;
+   fd_vert_[ 5] = 0.0;
+
+   fd_vert_[ 6] = (a_ < b_) ? (0.5 * a_) : (0.25 * (a_ * a_ - b_ * b_) / a_);
+   fd_vert_[ 7] = (a_ < b_) ? (0.25 * (b_ * b_ - a_ * a_) / b_) : (0.5 * b_);
+   fd_vert_[ 8] = 0.0;
+
+   fd_vert_[ 9] = 0.0;
+   fd_vert_[10] = min(0.5 * b_, 0.25 * (a_ * a_ + b_ * b_) / b_);
+   fd_vert_[11] = 0.0;
+
+   fd_vert_[12] = 0.0;
+   fd_vert_[13] = 0.0;
+   fd_vert_[14] = 0.5 * c_;
+
+   fd_vert_[15] = min(0.5 * a_, 0.25 * (a_ * a_ + b_ * b_) / a_);
+   fd_vert_[16] = 0.0;
+   fd_vert_[17] = 0.5 * c_;
+
+   fd_vert_[18] = (a_ < b_) ? (0.5 * a_) : (0.25 * (a_ * a_ - b_ * b_) / a_);
+   fd_vert_[19] = (a_ < b_) ? (0.25 * (b_ * b_ - a_ * a_) / b_) : (0.5 * b_);
+   fd_vert_[20] = 0.5 * c_;
+
+   fd_vert_[21] = 0.0;
+   fd_vert_[22] = min(0.5 * b_, 0.25 * (a_ * a_ + b_ * b_) / b_);
+   fd_vert_[23] = 0.5 * c_;
+
+   fd_e2v_[0] = 0; fd_e2v_[1] = 1; fd_e2v_[2] = 2; fd_e2v_[3] = 3;
+   fd_e2v_[4] = 4; fd_e2v_[5] = 5; fd_e2v_[6] = 6; fd_e2v_[7] = 7;
+   fd_elem_att_[0] = 1;
+
+   fd_be2v_[ 0] = 0; fd_be2v_[ 1] = 3; fd_be2v_[ 2] = 2; fd_be2v_[ 3] = 1;
+   fd_be2v_[ 4] = 4; fd_be2v_[ 5] = 5; fd_be2v_[ 6] = 6; fd_be2v_[ 7] = 7;
+   fd_be2v_[ 8] = 0; fd_be2v_[ 9] = 1; fd_be2v_[10] = 5; fd_be2v_[11] = 4;
+   fd_be2v_[12] = 1; fd_be2v_[13] = 2; fd_be2v_[14] = 6; fd_be2v_[15] = 5;
+   fd_be2v_[16] = 2; fd_be2v_[17] = 3; fd_be2v_[18] = 7; fd_be2v_[19] = 6;
+   fd_be2v_[20] = 3; fd_be2v_[21] = 0; fd_be2v_[22] = 4; fd_be2v_[23] = 7;
+
+   fd_belem_att_[0] = 10; fd_belem_att_[1] =  1;
+   fd_belem_att_[2] =  1; fd_belem_att_[3] =  1;
+   fd_belem_att_[4] = 10; fd_belem_att_[5] = 10;
+   /*
    for (int i=0; i<63; i++) { ws_vert_[i] = 0.0; }
    for (int i=0; i<3; i++)
    {
@@ -5537,6 +5581,7 @@ BaseCenteredOrthorhombicLattice::BaseCenteredOrthorhombicLattice(double a,
    ws_be2v_[68] = 14; ws_be2v_[69] = 19; ws_be2v_[70] = 20; ws_be2v_[71] = 15;
 
    for (int i=0; i<18; i++) { ws_belem_att_[i] = 1; }
+   */
 }
 
 bool
@@ -5602,6 +5647,20 @@ BaseCenteredOrthorhombicLattice::GetTransformation(int ti) const
 }
 
 Mesh *
+BaseCenteredOrthorhombicLattice::GetFundamentalDomainMesh() const
+{
+   Mesh * mesh = new Mesh((double*)fd_vert_, 8,
+                          (int*)fd_e2v_, Geometry::CUBE,
+                          (int*)fd_elem_att_, 1,
+                          (int*)fd_be2v_, Geometry::SQUARE,
+                          (int*)fd_belem_att_, 6,
+                          3, 3);
+   mesh->Finalize();
+
+   return mesh;
+}
+/*
+Mesh *
 BaseCenteredOrthorhombicLattice::GetWignerSeitzMesh(bool tetMesh) const
 {
    Mesh * mesh = new Mesh((double*)ws_vert_, 21,
@@ -5640,7 +5699,7 @@ BaseCenteredOrthorhombicLattice::GetPeriodicWignerSeitzMesh(bool tetMesh) const
 
    return per_mesh;
 }
-
+*/
 HexagonalPrismLattice::HexagonalPrismLattice(double a, double c)
    : BravaisLattice3D(a, a, c, 0.5 * M_PI, 0.5 * M_PI, 2.0 * M_PI / 3.0)
 {
@@ -8350,9 +8409,9 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
       case FACE_CENTERED_ORTHORHOMBIC:
          // Face-centered Orthorhombic Lattice
          // lattice_label = "ORCF";
-         if ( a <= 0.0 ) { a = 0.5; }
-         if ( b <= 0.0 ) { b = 0.8; }
-         if ( c <= 0.0 ) { c = 1.0; }
+         if ( a <= 0.0 ) { a = 0.25; }
+         if ( b <= a   ) { b = 2.0 * a; }
+         if ( c <= b   ) { c = 2.0 * b; }
          if ( logging_ > 0 )
          {
             cout << "Calling FaceCenteredOrthorhombicLattice("
@@ -8363,9 +8422,9 @@ BravaisLatticeFactory::GetLattice(BRAVAIS_LATTICE_TYPE lattice_type,
       case BODY_CENTERED_ORTHORHOMBIC:
          // Body-centered Orthorhombic Lattice
          // lattice_label = "ORCI";
-         if ( a <= 0.0 ) { a = 0.5; }
-         if ( b <= 0.0 ) { b = 0.8; }
-         if ( c <= 0.0 ) { c = 1.0; }
+         if ( a <= 0.0 ) { a = 0.25; }
+         if ( b <= a   ) { b = 2.0 * a; }
+         if ( c <= 0.0 ) { c = 2.0 * b; }
          if ( logging_ > 0 )
          {
             cout << "Calling BodyCenteredOrthorhombicLattice("

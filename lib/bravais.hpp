@@ -915,26 +915,28 @@ public:
    unsigned int GetNumberTransformations() const { return 8; }
    const DenseMatrix & GetTransformation(int ti) const;
 
-   virtual mfem::Mesh * GetFundamentalDomainMesh() const { return NULL; }
+   virtual mfem::Mesh * GetFundamentalDomainMesh() const;
 
-   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
-   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
 
 private:
 
    // Data for mesh of the fundamental domain
-   double fd_vert_[30];  // Vertex coordinates
-   int fd_e2v_[14];       // Element to vertex connectivity
-   int fd_elem_att_[2];  // Element Attributes
-   int fd_be2v_[34];     // Boundary Element to vertex connectivity
-   int fd_belem_att_[9]; // Boundary element Attributes
+   double fd_vert_[24];  // Vertex coordinates
+   int fd_e2v_[8];       // Element to vertex connectivity
+   int fd_elem_att_[1];  // Element Attributes
+   int fd_be2v_[24];     // Boundary Element to vertex connectivity
+   int fd_belem_att_[6]; // Boundary element Attributes
 
    // Data for mesh of the corresponding Wigner-Setiz Cell
+   /*
    double ws_vert_[63];   // Vertex coordinates
    int ws_e2v_[48];       // Element to vertex connectivity
    int ws_elem_att_[6];   // Element Attributes
    int ws_be2v_[72];      // Boundary Element to vertex connectivity
    int ws_belem_att_[18]; // Boundary element Attributes
+   */
 };
 
 class HexagonalPrismLattice : public BravaisLattice3D
