@@ -175,7 +175,8 @@ int main(int argc, char *argv[])
       if (print_char)
       {
          cout << endl;
-         cout << "Lattice Type:     " << fact.GetLatticeName(blType) << endl;
+         cout << "Lattice Type:     " << fact.GetLatticeName(blType)
+	      << " (" << lat->GetLatticeTypeLabel() << ")" << endl;
 	 cout << "Parameters:       " << lat->GetParameterBoundStr() << endl;
          if (fact.Is1D(blType))
          {
