@@ -220,6 +220,9 @@ periodic-bravais-mesh: meshing/periodic-bravais-mesh.cpp lib/libbravais.a $(MFEM
 display-bravais: meshing/display-bravais.cpp lib/libbravais.a $(MFEM_LIB_FILE)
 	$(CCC) -o display-bravais meshing/display-bravais.cpp -Llib -lbravais $(LIBS)
 
+toroidal-void: meshing/toroidal-void.cpp lib/libbravais.a $(MFEM_LIB_FILE)
+	$(CCC) -o toroidal-void meshing/toroidal-void.cpp -Llib -lbravais $(LIBS)
+
 glvis: override MFEM_DIR = $(MFEM_DIR1)
 glvis:	glvis.cpp lib/libbravais.a $(CONFIG_MK) $(MFEM_LIB_FILE)
 	$(CCC) -o glvis glvis.cpp -Llib -lglvis $(LIBS)
