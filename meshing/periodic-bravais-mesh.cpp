@@ -11,7 +11,7 @@
 //
 
 #include "mfem.hpp"
-#include "bravais.hpp"
+#include "../lib/bravais.hpp"
 #include <fstream>
 #include <limits>
 #include <cstdlib>
