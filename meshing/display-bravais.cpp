@@ -69,6 +69,8 @@ int main(int argc, char *argv[])
    double beta  = NAN;
    double gamma = NAN;
 
+   bool fdMesh = true;
+
    bool visualization = true;
 
    OptionsParser args(argc, argv);
@@ -86,6 +88,10 @@ int main(int argc, char *argv[])
                   "Angle beta in degrees");
    args.AddOption(&gamma, "-gamma", "--gamma",
                   "Angle gamma in degrees");
+   args.AddOption(&fdMesh, "-fd", "--fund-domain", "-no-fd",
+                  "--no-fund-domain",
+                  "Enable or disable meshes derived from "
+                  "the fundamental domain.");
    args.AddOption(&visualization, "-vis", "--visualization", "-no-vis",
                   "--no-visualization",
                   "Enable or disable GLVis visualization.");
@@ -150,7 +156,7 @@ int main(int argc, char *argv[])
             lat3d->GetInteraxialAngles(alpha, beta, gamma);
          }
 
-         delete mesh; mesh = lat->GetWignerSeitzMesh();
+         delete mesh; mesh = lat->GetWignerSeitzMesh(fdMesh);
          if (mesh)
          {
             if (visualization)
@@ -176,8 +182,8 @@ int main(int argc, char *argv[])
       {
          cout << endl;
          cout << "Lattice Type:     " << fact.GetLatticeName(blType)
-	      << " (" << lat->GetLatticeTypeLabel() << ")" << endl;
-	 cout << "Parameters:       " << lat->GetParameterBoundStr() << endl;
+              << " (" << lat->GetLatticeTypeLabel() << ")" << endl;
+         cout << "Parameters:       " << lat->GetParameterBoundStr() << endl;
          if (fact.Is1D(blType))
          {
             cout << "Lattice Spacing:  " << a;
@@ -208,7 +214,8 @@ int main(int argc, char *argv[])
            "c) Close Window and Quit\n"
            "l) Change Lattice Type\n"
            "s) Change Sizes\n"
-           "a) Change Angles\n";
+           "a) Change Angles\n"
+           "f) Toggle fundamental domain meshes\n";
       cout << "--> " << flush;
       char mk;
       cin >> mk;
@@ -351,6 +358,10 @@ int main(int argc, char *argv[])
             gamma = M_PI * gamma_tmp / 180.0;
             print_char = true;
          }
+      }
+      if (mk == 'f')
+      {
+         fdMesh = !fdMesh;
       }
       /*
       if (mk == 'b')
