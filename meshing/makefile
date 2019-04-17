@@ -10,20 +10,19 @@
 # Software Foundation) version 2.1 dated February 1999.
 
 # Use the MFEM build directory
-MFEM_DIR ?= ../..
-MFEM_BUILD_DIR ?= ../..
-SRC = $(if $(MFEM_DIR:../..=),$(MFEM_DIR)/miniapps/meshing/,)
+BRAVAIS_DIR ?= ..
+BRAVAIS_BUILD_DIR ?= ..
+SRC = $(if $(BRAVAIS_DIR:..=),$(BRAVAIS_DIR)/meshing/,)
 CONFIG_MK = $(MFEM_BUILD_DIR)/config/config.mk
-TEST_MK = $(MFEM_DIR)/config/test.mk
 # Use the MFEM install directory
 # MFEM_DIR = ../../mfem
 # CONFIG_MK = $(MFEM_DIR)/config.mk
 # TEST_MK = $(MFEM_DIR)/test.mk
 
-MFEM_LIB_FILE = mfem_is_not_built
+BRAVAIS_LIB_FILE = bravais_is_not_built
 -include $(CONFIG_MK)
 
-SEQ_MINIAPPS = mobius-strip klein-bottle mesh-explorer
+SEQ_MINIAPPS = toct mobius-strip klein-bottle mesh-explorer
 PAR_MINIAPPS =
 ifeq ($(MFEM_USE_MPI),NO)
    MINIAPPS = $(SEQ_MINIAPPS)
@@ -42,13 +41,13 @@ endif
 %: $(SRC)%.cpp $(MFEM_LIB_FILE) $(CONFIG_MK)
 	$(MFEM_CXX) $(MFEM_FLAGS) $< -o $@ $(MFEM_LIBS)
 
-periodic-bravais-mesh: periodic-bravais-mesh.cpp $(MFEM_LIB_FILE) $(CONFIG_MK)
-	$(MFEM_CXX) $(MFEM_FLAGS) $< -o $@ -I../common $(MFEM_LIBS) ../common/bravais.o
+periodic-bravais-mesh: periodic-bravais-mesh.cpp $(BRAVAIS_LIB_FILE) $(CONFIG_MK)
+	$(MFEM_CXX) $(MFEM_FLAGS) $< -o $@ -I../lib $(MFEM_LIBS) -L .. -lmfem-bravais
 
 all: $(MINIAPPS)
 
-MFEM_TESTS = MINIAPPS
-include $(TEST_MK)
+#MFEM_TESTS = MINIAPPS
+#include $(TEST_MK)
 
 # Testing: Parallel vs. serial runs
 RUN_MPI = $(MFEM_MPIEXEC) $(MFEM_MPIEXEC_NP) 4
