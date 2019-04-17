@@ -69,8 +69,8 @@ public:
    inline BRAVAIS_LATTICE_TYPE GetLatticeType() const { return type_; }
    inline const std::string & GetLatticeTypeLabel() const { return label_; }
 
-   const std::string & GetParameterBoundStr() const { return bounds_str_; }  
-  
+   const std::string & GetParameterBoundStr() const { return bounds_str_; }
+
    inline unsigned int GetDim() const { return dim_; }
    inline double GetUnitCellVolume() const { return vol_; }
    inline double GetBrillouinZoneVolume() const { return bz_vol_; }
@@ -131,10 +131,23 @@ public:
    void GetPathSegmentEndPointIndices(int p, int s, int & e0, int & e1);
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const = 0;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const
+   {
+      /// Return the fundamental domain based mesh unless this is overridden
+      return GetWignerSeitzMesh(true);
+   }
 
-   virtual mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
+   /** Builds and returns a new Mesh object of the Wigner-Seitz cell.
+       If @a fdMesh is TRUE then the mesh is built by applying a sequence
+       of transformations to a mesh of the fundamental domain.  The resulting
+       mesh will therefore be split into elements which are bounded by the
+       symmetry planes of the lattice.  If @a fdMesh is FALSE then a simple
+       mesh of the Wigner-Seitz cell will be returned which may contain elements
+       that do not conform to the symmetries of the lattice.
+    */
+   virtual mfem::Mesh * GetWignerSeitzMesh(bool fdMesh = true) const;
    virtual mfem::Mesh *
-   GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   GetPeriodicWignerSeitzMesh(bool fdMesh = true) const;
 
 protected:
    BravaisLattice(unsigned int dim);
@@ -311,6 +324,8 @@ public:
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
 
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
+
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
 
@@ -347,6 +362,7 @@ public:
    virtual const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
@@ -386,6 +402,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
@@ -428,6 +445,7 @@ public:
    virtual const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
@@ -466,6 +484,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
@@ -504,6 +523,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool triMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool triMesh = false) const;
@@ -545,6 +565,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
@@ -590,6 +611,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
@@ -602,14 +624,13 @@ private:
    int fd_elem_att_[1];  // Element Attributes
    int fd_be2v_[12];     // Boundary Element to vertex connectivity
    int fd_belem_att_[4]; // Boundary element Attributes
-   /*
+
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[45];   // Vertex coordinates
    int ws_e2v_[32];       // Element to vertex connectivity
    int ws_elem_att_[4];   // Element Attributes
-   int ws_be2v_[48];      // Boundary Element to vertex connectivity
-   int ws_belem_att_[12]; // Boundary element Attributes
-   */
+   // int ws_be2v_[48];      // Boundary Element to vertex connectivity
+   // int ws_belem_att_[12]; // Boundary element Attributes
 };
 
 class BodyCenteredCubicLattice : public BravaisLattice3D
@@ -629,6 +650,7 @@ public:
    const DenseMatrix & GetTransformation(int ti) const;
 
    virtual mfem::Mesh * GetFundamentalDomainMesh() const;
+   virtual mfem::Mesh * GetWignerSeitzCellMesh() const;
 
    // mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
    // mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
@@ -648,14 +670,13 @@ private:
    int fd_elem_att_[2];  // Element Attributes
    int fd_be2v_[22];     // Boundary Element to vertex connectivity
    int fd_belem_att_[7]; // Boundary element Attributes
-   /*
+
    // Data for mesh of the corresponding Wigner-Setiz Cell
    double ws_vert_[114];  // Vertex coordinates
    int ws_e2v_[128];      // Element to vertex connectivity
    int ws_elem_att_[16];  // Element Attributes
-   int ws_be2v_[120];     // Boundary Element to vertex connectivity
-   int ws_belem_att_[30]; // Boundary element Attributes
-   */
+   // int ws_be2v_[120];     // Boundary Element to vertex connectivity
+   // int ws_belem_att_[30]; // Boundary element Attributes
 };
 
 class TetragonalLattice : public BravaisLattice3D
@@ -841,8 +862,8 @@ public:
    unsigned int GetNumberTransformations() const { return 8; }
    const DenseMatrix & GetTransformation(int ti) const;
 
-   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
-   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetWignerSeitzMesh(bool fdMesh = true) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool fdMesh = true) const;
 
 private:
 
@@ -873,8 +894,8 @@ public:
    unsigned int GetNumberTransformations() const { return 8; }
    const DenseMatrix & GetTransformation(int ti) const;
 
-   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
-   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetWignerSeitzMesh(bool fdMesh = true) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool fdMesh = true) const;
 
 private:
 
@@ -991,8 +1012,8 @@ public:
    virtual unsigned int GetNumberPaths()              { return (alpha_ < 0.5 * M_PI)?4:1; }
    virtual unsigned int GetNumberPathSegments(int i)  { return (alpha_ < 0.5 * M_PI)?((i==0)?2:((i==1)?3:((i==2)?3:1))):9; }
 
-   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
-   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetWignerSeitzMesh(bool fdMesh = true) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool fdMesh = true) const;
 
 private:
 
@@ -1082,8 +1103,8 @@ public:
    virtual unsigned int GetNumberPathSegments(int i)
    { return (i==0)?8:((i==1)?2:1); }
 
-   mfem::Mesh * GetWignerSeitzMesh(bool tetMesh = false) const;
-   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool tetMesh = false) const;
+   mfem::Mesh * GetWignerSeitzMesh(bool fdMesh = true) const;
+   mfem::Mesh * GetPeriodicWignerSeitzMesh(bool fdMesh = true) const;
 
 private:
 
